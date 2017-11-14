@@ -1,0 +1,101 @@
+package jzs.msg.qms;
+
+import "md.proto";
+
+message SimpleMarketQuote {
+    required bool is_empty = 1;    
+    required string symbol = 2;
+    required int32 time = 3;    
+
+    required double open = 4;
+    required double high = 5;
+    required double low = 6;
+    required double last = 7;
+    
+    required int64  volume = 8;
+    required double turnover = 9;
+    required int64 interest = 10;    
+   
+    required md.AskBid ab = 11;
+    required md.QuoteStatic qs = 12;
+
+    required double iopv = 13;
+
+    optional int32 quoteage = 14; 
+    optional double vwap = 15;
+};
+
+message StrategyMarketQuotesReq {
+    required uint32 req_id = 1;
+    required uint32 strategy_id = 2;
+};
+
+
+message StrategyMarketQuotesRsp {
+    required uint32 req_id = 1;
+    required uint32 strategy_id = 2;
+    required bool result = 3;
+    repeated SimpleMarketQuote quotes = 4;
+    optional int32  middle_age = 5;
+};
+
+message StrategySubscribeReq {
+    required uint32 req_id = 1;
+    required uint32 strategy_id = 2;
+    repeated string symbols = 3;
+};
+
+message StrategySubscribeRsp {
+    required uint32 req_id = 1;
+    required uint32 strategy_id = 2;
+    required bool result = 3;
+    repeated string err_symbols = 4;
+};
+
+message Bar {
+    required uint32 date = 1;
+    required uint32 time = 2;
+    required double open = 3;
+    required double high = 4;
+    required double low = 5;
+    required double close = 6;
+    required double volume = 7;
+    required double turnover = 8;
+    required uint32  match_item = 9;
+    required uint32  interest = 10;
+    optional uint32  flag = 11;
+    optional double volume_inc   = 12;
+    optional double turnover_inc = 13;
+    optional int64  interest_inc = 14;
+    optional double vwap = 15;
+};
+
+message Bar1M {
+    repeated Bar bar = 1;
+    required md.MarketQuote last = 2;
+};
+
+message MarketQuoteReq {
+    required string symbol = 1;
+};
+
+
+message MarketQuoteRsp {
+    required string symbol = 1;
+    required bool result = 3;
+    optional md.MarketQuote data = 4;    
+};
+
+message Bar1MReq {
+    //required uint32 jzcode = 1;
+    required string symbol = 1;
+};
+
+
+message Bar1MRsp {
+    //required uint32 jzcode = 1;
+    required string symbol = 1;
+    required bool result = 2;
+    optional Bar1M data = 3;    
+};
+

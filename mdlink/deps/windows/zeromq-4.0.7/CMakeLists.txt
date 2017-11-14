@@ -1,0 +1,183 @@
+project(zmq)
+
+set(SRC
+    src/address.cpp
+    src/address.hpp
+    src/array.hpp
+    src/atomic_counter.hpp
+    src/atomic_ptr.hpp
+    src/blob.hpp
+    src/clock.cpp
+    src/clock.hpp
+    src/command.hpp
+    src/config.hpp
+    src/ctx.cpp
+    src/ctx.hpp
+    src/curve_client.cpp
+    src/curve_client.hpp
+    src/curve_server.cpp
+    src/curve_server.hpp
+    src/dbuffer.hpp
+    src/dealer.cpp
+    src/dealer.hpp
+    src/decoder.hpp
+    src/devpoll.cpp
+    src/devpoll.hpp
+    src/dist.cpp
+    src/dist.hpp
+    src/encoder.hpp
+    src/epoll.cpp
+    src/epoll.hpp
+    src/err.cpp
+    src/err.hpp
+    src/fd.hpp
+    src/fq.cpp
+    src/fq.hpp
+    src/io_object.cpp
+    src/io_object.hpp
+    src/io_thread.cpp
+    src/io_thread.hpp
+    src/ip.cpp
+    src/ip.hpp
+    src/ipc_address.cpp
+    src/ipc_address.hpp
+    src/ipc_connecter.cpp
+    src/ipc_connecter.hpp
+    src/ipc_listener.cpp
+    src/ipc_listener.hpp
+    src/i_decoder.hpp
+    src/i_encoder.hpp
+    src/i_engine.hpp
+    src/i_poll_events.hpp
+    src/kqueue.cpp
+    src/kqueue.hpp
+    src/lb.cpp
+    src/lb.hpp
+    src/libzmq.pc.in
+    src/libzmq.vers
+    src/likely.hpp
+    src/mailbox.cpp
+    src/mailbox.hpp
+    src/Makefile.am
+    src/Makefile.in
+    src/mechanism.cpp
+    src/mechanism.hpp
+    src/msg.cpp
+    src/msg.hpp
+    src/mtrie.cpp
+    src/mtrie.hpp
+    src/mutex.hpp
+    src/null_mechanism.cpp
+    src/null_mechanism.hpp
+    src/object.cpp
+    src/object.hpp
+    src/options.cpp
+    src/options.hpp
+    src/own.cpp
+    src/own.hpp
+    src/pair.cpp
+    src/pair.hpp
+    src/pgm_receiver.cpp
+    src/pgm_receiver.hpp
+    src/pgm_sender.cpp
+    src/pgm_sender.hpp
+    src/pgm_socket.cpp
+    src/pgm_socket.hpp
+    src/pipe.cpp
+    src/pipe.hpp
+    src/plain_mechanism.cpp
+    src/plain_mechanism.hpp
+    src/platform.hpp
+    src/platform.hpp.in
+    src/poll.cpp
+    src/poll.hpp
+    src/poller.hpp
+    src/poller_base.cpp
+    src/poller_base.hpp
+    src/precompiled.cpp
+    src/precompiled.hpp
+    src/proxy.cpp
+    src/proxy.hpp
+    src/pub.cpp
+    src/pub.hpp
+    src/pull.cpp
+    src/pull.hpp
+    src/push.cpp
+    src/push.hpp
+    src/random.cpp
+    src/random.hpp
+    src/raw_decoder.cpp
+    src/raw_decoder.hpp
+    src/raw_encoder.cpp
+    src/raw_encoder.hpp
+    src/reaper.cpp
+    src/reaper.hpp
+    src/rep.cpp
+    src/rep.hpp
+    src/req.cpp
+    src/req.hpp
+    src/router.cpp
+    src/router.hpp
+    src/select.cpp
+    src/select.hpp
+    src/session_base.cpp
+    src/session_base.hpp
+    src/signaler.cpp
+    src/signaler.hpp
+    src/socket_base.cpp
+    src/socket_base.hpp
+    src/stdint.hpp
+    src/stream.cpp
+    src/stream.hpp
+    src/stream_engine.cpp
+    src/stream_engine.hpp
+    src/sub.cpp
+    src/sub.hpp
+    src/tcp.cpp
+    src/tcp.hpp
+    src/tcp_address.cpp
+    src/tcp_address.hpp
+    src/tcp_connecter.cpp
+    src/tcp_connecter.hpp
+    src/tcp_listener.cpp
+    src/tcp_listener.hpp
+    src/thread.cpp
+    src/thread.hpp
+    src/trie.cpp
+    src/trie.hpp
+    src/v1_decoder.cpp
+    src/v1_decoder.hpp
+    src/v1_encoder.cpp
+    src/v1_encoder.hpp
+    src/v2_decoder.cpp
+    src/v2_decoder.hpp
+    src/v2_encoder.cpp
+    src/v2_encoder.hpp
+    src/v2_protocol.hpp
+    src/windows.hpp
+    src/wire.hpp
+    src/xpub.cpp
+    src/xpub.hpp
+    src/xsub.cpp
+    src/xsub.hpp
+    src/ypipe.hpp
+    src/ypipe_base.hpp
+    src/ypipe_conflate.hpp
+    src/yqueue.hpp
+    src/zmq.cpp
+    src/zmq_utils.cpp
+)
+
+include_directories( include )
+
+if (WIN32)
+  add_definitions(-DFD_SETSIZE=1024 -DDLL_EXPORT)
+endif()
+
+
+add_library(zmq SHARED ${SRC})
+
+target_link_libraries(zmq ws2_32 rpcrt4 advapi32)
+
+install (TARGETS zmq RUNTIME DESTINATION ${LIB_PATH})
+    

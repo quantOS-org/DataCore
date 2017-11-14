@@ -1,0 +1,23 @@
+package jzs.msg.misc;
+
+// Qms Save tick
+message Code {
+    required uint32 jzcode = 1;
+    required string symbol = 2;
+};
+
+message CodeTable {
+    required uint32 date   = 1;
+    repeated Code codes    = 2;
+};
+
+message LowHeartBeatReq {
+    required uint32 req_id = 1;
+    required uint64 req_time = 2; // ms
+};
+
+message LowHeartBeatRsp {
+    required uint32 req_id = 1;
+    required uint64 req_time = 2; // ms
+    required uint64 rsp_time = 3; // ms
+};

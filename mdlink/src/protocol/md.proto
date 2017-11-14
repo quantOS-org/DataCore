@@ -1,0 +1,78 @@
+package jzs.msg.md;
+
+message AskBid {
+    //required uint32    level = 1;
+    repeated  double  bidPrice = 1;
+    repeated uint32   bidVolume  = 2;
+    repeated double   askPrice = 3;
+    repeated uint32   askVolume = 4;
+};
+        
+message QuoteStatic {
+    required uint32 date  = 1;
+    required uint32 tradeday = 2;
+    required double uplimit = 3;
+    required double downlimit = 4;  
+
+    required int64  preinterest = 5;
+    required double preclose = 6;
+    required double presettle = 7;
+    required double predelta = 8;
+};
+
+message MarketQuoteExData {
+    optional double rsi_turnover = 1;  
+    optional double rsi_roc = 2;       
+    optional double rop_found = 3;     
+};
+
+message MarketQuote {
+
+    required uint32 jzcode = 1;
+    optional string symbol = 2;
+    required uint32 time = 3;
+
+    required double open = 4;
+    required double high = 5;
+    required double low = 6;
+    required double last = 7;
+    
+    required int64  volume = 8;
+    required double turnover = 9;
+    required int64 interest = 10;    
+    
+    required double close = 11;
+    required double settle = 12;
+    required double delta = 13;
+    
+    required AskBid ab = 14;
+    required QuoteStatic qs = 15;
+    
+    //int ntrade; // STK - L2 trade nums for the last trade px
+    required double iopv = 16;
+    
+    required double avgbidpx = 17;
+    required int64 totbidvol = 18;
+
+    required double avgaskpx = 19;
+    required int64 totaskvol = 20;
+    
+    //bool isbid;  // no userable 
+    optional int32 quoteage = 21; 
+
+    optional MarketQuoteExData ext = 22;
+    optional double vwap = 23;
+};
+
+enum MarketDataType{
+    MD_STK_L1 = 1;
+    MD_STK_L2 = 2;
+    MD_FUT_L1 = 3;
+    MD_FUT_L2 = 4;
+};
+
+message MarketDataInd {
+    required MarketDataType type = 1;
+    optional MarketQuote    stk = 2;
+    optional MarketQuote    fut = 3;
+};

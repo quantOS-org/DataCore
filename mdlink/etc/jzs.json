@@ -1,0 +1,64 @@
+{
+    "global": {
+        "mdlink_addr": "tcp://127.0.0.1:8700",
+        "qms_addr": "tcp://127.0.0.1:9000"
+    },
+
+    "qms": {
+        "id": "qms01",
+        "check_code": true,
+        "addr": "tcp://0.0.0.0:9000"
+    },
+
+    "mdlink": 
+    {
+        "mdlink2": {
+            "pub_addr": "tcp://0.0.0.0:8700",
+            "do_merge": true,
+            "route": "MERGE",
+            "time_tolerance": 10000,
+            "sources": [
+                { "addr": "tcp://127.0.0.1:10001", "id": "future1" },
+                { "addr": "tcp://127.0.0.1:10002", "id": "stock1" }
+            ]
+        },
+
+        "future1": {
+            "pub_addr": "tcp://0.0.0.0:10001",
+            "route": "CTP",
+            "source_id": 1,
+            "sources": [
+                {
+                    "id": "future1",
+                    "route": "CTP",
+                    "front": [
+                        "tcp://ctp1-front2.citicsf.com:41213",
+                        "tcp://ctp1-front4.citicsf.com:41213"
+                    ],
+                    "broker": "66666",
+                    "investor": "111111",
+                    "passwd": "111111",
+                    "udp": false,
+                    "multicast": false
+                }
+            ]
+        },
+
+        "stock1": {
+            "pub_addr": "tcp://0.0.0.0:10002",
+            "route": "TDF",
+            "source_id": 2,
+            "sources": [
+                {
+                    "id": "stock1",
+                    "route": "TDF",
+                    "addr": "114.80.154.34",
+                    "port": 6221,
+                    "username": "TDXXXXXX",
+                    "passwd": "111111",
+                    "markets": "SZ-2;SH-2;CF-2"
+                }
+            ]
+        }
+    }
+}

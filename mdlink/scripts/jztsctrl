@@ -1,0 +1,58 @@
+#!/bin/bash
+
+[ $# = 3 ] | exit 1
+
+export JZS_HOME=$(dirname $(dirname $(readlink -f "$0")) )
+export LD_LIBRARY_PATH=$JZS_HOME/lib:$LD_LIBRARY_PATH
+
+cd $JZS_HOME
+
+ulimit -c unlimited
+
+status() {
+	pid=`ps -ef | grep $1 | grep $2 | grep -v jztsctrl | grep -v grep | awk '{ print $2 }'`
+    if [ "x$pid" != "x" ]; then
+        echo "$1 $2 is running, pid=$pid"
+        return 0
+    else
+        echo "$1 $2 is not running"
+        return 1
+    fi
+}
+
+start() {
+    if [ -f bin/$1 ]; then
+        status $1 $2
+        if [ $? != 0 ]; then
+            echo start $1 $2
+            nohup bin/$1 $2 >>data/log/$1_$2.log 2>&1 &
+        fi
+    fi
+}
+
+stop() {
+    echo stop $1 $2
+	pid=`ps -ef | grep $1 | grep $2 | grep -v jztsctrl | grep -v grep | awk '{ print $2 }'`
+    kill -9 $pid  2>/dev/null
+}
+
+case "$3" in
+  start)
+	start $1 $2
+  ;;
+  stop)
+	stop $1 $2 
+  ;;
+  restart)
+	stop $1 $2
+	start $1 $2
+  ;;
+  status)
+    status $1 $2
+  ;;
+  *)
+	echo "Usage: scripts/jzsctl module {start|stop|restart|status}" >&2
+	exit 2
+  ;;
+esac
+
