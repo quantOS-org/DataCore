@@ -20,8 +20,8 @@ limitations under the License.
 package org.quantos.jads.utils
 
 import java.sql.Timestamp
-import java.util.Date
-import java.util.Calendar
+import java.time.LocalDate
+import java.util.{Calendar, Date}
 
 object TimeUtil {
     
@@ -182,6 +182,21 @@ object TimeUtil {
      */
     def todayAsInt() = intDateSdf.format( java.util.Calendar.getInstance.getTime).toInt
     def nowTimeAsInt() = intTimeSdf.format( java.util.Calendar.getInstance.getTime).toInt
-
+    
+    def getLocalDateFromInt(date:Int) = {
+        val year  = date/10000
+        val month = date / 100 % 100
+        val day   = date % 100
+        val dt = LocalDate.of(year,month,day)
+        dt
+    }
+    
+    def getIntFromLocalDate(date:LocalDate) = {
+        val dt = date.getYear * 10000 + date.getMonthValue * 100 + date.getDayOfMonth
+        dt
+    }
+    
+//    val local_data = new LocalDate()
+//    TemporalAdjusters.
     
 }

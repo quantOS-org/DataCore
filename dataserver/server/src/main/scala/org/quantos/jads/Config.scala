@@ -18,7 +18,7 @@ limitations under the License.
 ***********************************************************************/
 
 package org.quantos.jads
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.quantos.utils.jrpc.JsonHelper
 
 import scala.io.Source
@@ -26,6 +26,12 @@ import scala.io.Source
 object Config {
 
     val logger = org.slf4j.LoggerFactory.getLogger(getClass.getSimpleName)
+    
+    case class DBConfig (
+                            url:         String,
+                            username:    String,
+                            password:    String
+                        )
 
     case class MdlinkConfig(
             addr        : String,
@@ -44,12 +50,22 @@ object Config {
             port : Int,
             doc_root  : String
     )
+    @JsonIgnoreProperties
+    case class DataBases (
+                          wind_db           : DBConfig
+                        )
 
+    @JsonIgnoreProperties
     case class AllConfig (
-        mdlink      : MdlinkConfig,
-        qms         : QmsConfig,
-        frontend    : FrontEndConfig,
-        http_server : HttpServerConfig
+                             db          : DataBases,
+                             mdlink      : MdlinkConfig,
+                             qms         : QmsConfig,
+                             frontend    : FrontEndConfig,
+                             http_server : HttpServerConfig,
+                             subscribe    : Boolean,
+                             flow_control : Int = 50,
+                             auth_disable : Boolean,
+                             auth_url : String
     )
 
     private var _env = ""

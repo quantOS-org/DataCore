@@ -21,7 +21,7 @@ package org.quantos.jads.gateway
 
 import java.util.concurrent.ConcurrentHashMap
 
-import akka.actor.{Actor, ActorRef}
+import akka.actor.{Actor, ActorRef, Props}
 import org.quantos.jads.utils.CommonRequestHandler
 import org.quantos.utils.jrpc.JsonHelper
 
@@ -31,6 +31,7 @@ import scala.concurrent.duration.{DurationInt, _}
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.sql.{Connection, DriverManager}
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.quantos.jads.Config
 
 object SessionActor {
@@ -55,6 +56,10 @@ object SessionActor {
     case class SubStrategiesReq (
         account_ids: List[Int]
     )
+    
+    case class SessionTerminatedInd ( client_id: String  )
+    case class SubscribeSessionTerminatedIndReq (client_id : String)
+    case class SubscribeSessionTerminatedIndRsp (client_id : String, success : Boolean)
 
     val session_mgr = new SessionManager
 
@@ -65,13 +70,27 @@ case class Session (
         name:     String,
         session:  String,
         client:   String,
-        var subscription_hash : String = ""
+        var subscription_hash : String = "",
+        val query_records : mutable.Queue[Long] = mutable.Queue[Long] ()
     )
 
+@JsonIgnoreProperties
+case class UserInfoData( user_id: Int,
+                   username: String,
+                   role:String,
+                   phone:String,
+                   email:String )
+
+@JsonIgnoreProperties
+case class UserCheckRsp( code: Int,
+                         msg: String,
+                         data: UserInfoData
+                       )
 
 class SessionManager {
-
     val logger = org.slf4j.LoggerFactory.getLogger(getClass.getSimpleName)
+    val flow_control = if (Config.conf.flow_control<= 0) 50 else Config.conf.flow_control
+    
     private case class Item(deadTime: Long, data: Session)
 
     private val clientSessionMap = new ConcurrentHashMap[String, Item]().asScala // client -> session
@@ -97,11 +116,34 @@ class SessionManager {
         }
     }
 
-    def check() {
+    // return removed session
+    def check() : Seq[String] = {
         val now = System.currentTimeMillis()
+        val removed = mutable.ArrayBuffer[String]()
         clientSessionMap.filter( _._2.deadTime < now ) foreach { x =>
             logger.info(s"cachemgr: remove dead item, client id: ${x._1}, session: ${x._2}")
+            removed += x._1
             clientSessionMap -= x._1
+        }
+        removed
+    }
+    
+    def checkFlowControl(session: Session) : String = {
+        val now = System.currentTimeMillis()
+        if(session.query_records.size < flow_control) {
+            session.query_records += now
+            ""
+        } else {
+            val front_time = session.query_records.front
+            while (session.query_records.size >= flow_control) {
+                session.query_records.dequeue()
+            }
+            session.query_records += now
+            if (now - front_time < (1 seconds).toMillis) {
+                return "Query too frequently"
+            } else {
+                return ""
+            }
         }
     }
 
@@ -110,7 +152,6 @@ class SessionManager {
     }
     
     def checkUser(username: String, password: String) : Boolean = {
-        // you can implement your user check here
         return true
     }
     
@@ -165,12 +206,16 @@ class SessionActor extends Actor with CommonRequestHandler {
     val CHECK_SESSION_TIMER = "Timer_CheckSessionTimer"
 
     this.context.system.scheduler.schedule(1 seconds, 1 seconds, self, CHECK_SESSION_TIMER)
+    
+    val subscriber_map = mutable.HashMap[String, mutable.ArrayBuffer[ActorRef]]()
 
     override def receive = {
         // rpc request
         case JsonCallReq(client, method, params) => onJsonCallReq(client, method, params)
 
-        case CHECK_SESSION_TIMER      => session_mgr.check()
+        case CHECK_SESSION_TIMER      => onCheckSession()
+
+        case SubscribeSessionTerminatedIndReq(client) => onSubscribeSessionTerminatedIndReq(client)
     }
 
     def onJsonCallReq(client: String, method: String, params: Any) {
@@ -227,5 +272,23 @@ class SessionActor extends Actor with CommonRequestHandler {
     def auth_logout(clientActor: ActorRef, client: String, params: Any) {
         SessionActor.session_mgr.destroySession(client)
         clientActor ! JsonCallRsp(true, null)
+    }
+    
+    def onSubscribeSessionTerminatedIndReq(client: String): Unit = {
+        var subscriber = this.subscriber_map.getOrElse(client, null)
+        if (subscriber == null) {
+            subscriber = mutable.ArrayBuffer[ActorRef]()
+            this.subscriber_map += client -> subscriber
+        }
+        subscriber += sender()
+        sender() ! SubscribeSessionTerminatedIndRsp(client, true)
+    }
+    
+    def onCheckSession(): Unit = {
+        val removed = session_mgr.check()
+        for ( client <- removed) {
+            val subscriber = this.subscriber_map.getOrElse(client, null)
+            for ( sub <- subscriber) sub ! SessionTerminatedInd(client)
+        }
     }
 }

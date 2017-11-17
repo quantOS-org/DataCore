@@ -172,6 +172,15 @@ object BaseData {
         return 0
     }
     
+    def isFuture(inst: Instrument): Boolean = {
+        inst.insttype match {
+            case 101 => true
+            case 102 => true
+            case 103 => true
+            case _ => false
+        }
+    }
+    
     def isBond(inst: Instrument) :Boolean = {
         if(inst != null) {
             inst.insttype match {

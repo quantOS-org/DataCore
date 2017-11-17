@@ -22,7 +22,7 @@ package org.quantos.jads.services.jsq
 import SubscriberActor._
 import QuoteSchema._
 
-import scala.concurrent.duration.DurationInt
+import scala.concurrent.duration.{Duration,DurationInt}
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.language.experimental.macros
@@ -35,6 +35,9 @@ import org.quantos.jads.gateway.{JRpcServer, SessionActor}
 import org.quantos.jads.gateway.JRpcServer.JsonCallRsp
 import jzs.msg.md.Md.{AskBid, MarketQuote, QuoteStatic}
 
+import scala.concurrent.Await
+import akka.util.Timeout
+import akka.pattern.ask
 
 object SubscriberActor {
 
@@ -63,7 +66,7 @@ class SubscriberActor extends FSM[Any, Any] {
     var publisher:   ActorRef = _
     var jsq_server:  ActorRef = _
 
-    var subscribedSybmols: Set[String] = _
+    var subscribedSybmols = Set[String]()
     var subscribedQuotes = mutable.HashMap[String, MarketQuote]()
 
     val defaultIndicators = schema.map { _.id } toSet
@@ -79,10 +82,15 @@ class SubscriberActor extends FSM[Any, Any] {
             clientId  = req.clientId
             publisher = req.publisher
             jsq_server    = sender
+            logger.info(s"new subscriber actor for $clientId")
 
-            setTimer(TIMER_KeepAliveTimeout, TIMER_KeepAliveTimeout, 1 minutes, true)
-
-            goto(Active)
+            
+            implicit val timeout = Timeout(65 seconds)
+            val f = (JRpcServer.session_actor ? SessionActor.SubscribeSessionTerminatedIndReq(clientId))
+                            .mapTo[SessionActor.SubscribeSessionTerminatedIndRsp]
+    
+            val r = Await.result(f, Duration.Inf)
+            goto ( if (r.success) Active else Unsubscribing)
     }
 
     when(Active) {
@@ -117,7 +125,35 @@ class SubscriberActor extends FSM[Any, Any] {
         case Event(rsp: PublisherActor.SubscribeRsp,  req: SubscribeReq) =>
 
             val sub_symbols =  rsp.subscribed.toSet
-            subscribedSybmols = sub_symbols.intersect(subscribedSybmols)
+            subscribedSybmols ++= sub_symbols
+//            var sub_spds = new mutable.ListBuffer[String]()
+//
+//            subscribedSpread.values foreach { x=>
+//                var all_subscribed = true
+//                for (member <- x.members) {
+//                    if(!sub_symbols.contains(member)) {
+//                        all_subscribed = false
+//                    }
+//                }
+//
+//                if(all_subscribed) {
+//                    for(member <- x.members) {
+//                        var spreads = instcode2spreads.getOrElse(member, null)
+//                        if(spreads == null) {
+//                            spreads = new mutable.ListBuffer[SpreadData]()
+//                            instcode2spreads += member->spreads
+//                        }
+//                        if(!spreads.contains(x)) {
+//                            spreads.append(x)
+//                        }
+//                    }
+//                    sub_spds.append(x.symbol)
+//                }
+//            }
+
+//            if (subscribedSybmols.nonEmpty || sub_spds.nonEmpty) {
+//                req.clientActor ! JsonCallRsp()
+//            }
 
             val hash_code = (subscribedSybmols).toSeq
                             .sorted.mkString(",").hashCode.toString
@@ -142,7 +178,35 @@ class SubscriberActor extends FSM[Any, Any] {
 
         case Event( StateTimeout, _) => goto(Unsubscribing)
     }
+    
+    onTransition {
+        case _ -> Unsubscribing => publisher ! PublisherActor.UnSubscribeReq()
+    }
+    
+    when(Unsubscribing) {
+        case Event( _: PublisherActor.UnSubscribeRsp, _) =>
+            logger.info("unsubscribe")
+            jsq_server ! JsqService.RemoveSubscriberActor(clientId)
+            stop
+    }
+    
+    whenUnhandled {
+//        case Event(_: KeepAlive, _) =>
+//            setTimer(TIMER_KeepAliveTimeout, TIMER_KeepAliveTimeout, 1 minutes, true)
+//            logger.info("keep alive")
+//            stay
+        
+        case Event(SessionActor.SessionTerminatedInd, _) if stateName != Unsubscribing =>
+            logger.info("unhandled event, goto unsubscribe")
+            goto (Unsubscribing)
+        
+        // Drop all quote if it is not int active
+        case Event(ind: PublisherActor.QuoteInd, _) => stay
 
+        case Event(x, _) =>
+            logger.info("Unknown Event " + x + "," + "on" + stateName)
+            stay
+    }
     def onQueryQuotesRsp(rsp: PublisherActor.QueryQuoteRsp) = {
         for(quote <- rsp.quotes) {
             val instcode = BaseData.getSymbol(quote.getJzcode)
@@ -218,27 +282,8 @@ class SubscriberActor extends FSM[Any, Any] {
     }
 
 
-    onTransition {
-        case _ -> Unsubscribing => publisher ! PublisherActor.UnSubscribeReq()
-    }
+    
 
-    when(Unsubscribing) {
-        case Event( _: PublisherActor.UnSubscribeRsp, _) =>
-            jsq_server ! JsqService.RemoveSubscriberActor(clientId)
-            stop
-    }
-
-    whenUnhandled {
-        case Event(_: KeepAlive, _) =>
-            setTimer(TIMER_KeepAliveTimeout, TIMER_KeepAliveTimeout, 1 minutes, true)
-            stay
-
-        case Event(TIMER_KeepAliveTimeout, _) if stateName != Unsubscribing =>
-            goto (Unsubscribing)
-
-        // Drop all quote if it is not int active
-        case Event(ind: PublisherActor.QuoteInd, _) => stay
-    }
 
     def publish(symbol: String, quote: MarketQuote) = {
 

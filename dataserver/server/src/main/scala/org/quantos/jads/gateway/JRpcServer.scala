@@ -43,11 +43,9 @@ object JRpcServer {
 
     case class JsonCallRsp(result: Any, message: String = "", error_code: Int = 0)
 
+    lazy val session_actor = Config.akka.system.actorOf(Props[SessionActor])
 
     def init() {
-
-        val session_actor = Config.akka.system.actorOf(Props[SessionActor])
-
         rpcserver.callback = new jrpc.JRpcServerCallback {
             def onCall(conn_id: String, method: String, params: Any) : Future[jrpc.JRpcCallResult] = {
 
@@ -58,12 +56,25 @@ object JRpcServer {
                     else null
 
                 Future {
+                    val session = SessionActor.session_mgr.getSession(conn_id)
                     if (target_actor == null) {
                         JRpcCallResult(null, JRpcError(message = "unknown service", error = -1))
 
-                    } else if (target_actor != session_actor &&
-                                SessionActor.session_mgr.getSession(conn_id) == null) {
-                        JRpcCallResult(null, JRpcError(message = "no privilege", error = -1))
+                    } else if (target_actor != session_actor ) {
+                        if(session == null) {
+                            JRpcCallResult(null, JRpcError(message = "no privilege", error = -1))
+                        } else {
+                            val msg =  SessionActor.session_mgr.checkFlowControl(session)
+                            if(msg != "") {
+                                JRpcCallResult(null, JRpcError(message = "query too frequently", error = -1))
+                            } else {
+                                implicit val timeout = Timeout(65 seconds)
+                                val f = (target_actor ? JsonCallReq(conn_id, method, params)).mapTo[JsonCallRsp]
+                                val r = Await.result(f, Duration.Inf)
+                                JRpcCallResult(r.result, JRpcError(message = r.message, error = r.error_code))
+                            }
+                        }
+                        
 
                     } else {
 
