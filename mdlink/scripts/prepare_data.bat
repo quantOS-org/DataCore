@@ -1,0 +1,1 @@
+start cmd /k "cd .. && python ./scripts/download.py"
