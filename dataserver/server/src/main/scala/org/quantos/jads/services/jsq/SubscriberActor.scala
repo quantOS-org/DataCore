@@ -126,34 +126,6 @@ class SubscriberActor extends FSM[Any, Any] {
 
             val sub_symbols =  rsp.subscribed.toSet
             subscribedSybmols ++= sub_symbols
-//            var sub_spds = new mutable.ListBuffer[String]()
-//
-//            subscribedSpread.values foreach { x=>
-//                var all_subscribed = true
-//                for (member <- x.members) {
-//                    if(!sub_symbols.contains(member)) {
-//                        all_subscribed = false
-//                    }
-//                }
-//
-//                if(all_subscribed) {
-//                    for(member <- x.members) {
-//                        var spreads = instcode2spreads.getOrElse(member, null)
-//                        if(spreads == null) {
-//                            spreads = new mutable.ListBuffer[SpreadData]()
-//                            instcode2spreads += member->spreads
-//                        }
-//                        if(!spreads.contains(x)) {
-//                            spreads.append(x)
-//                        }
-//                    }
-//                    sub_spds.append(x.symbol)
-//                }
-//            }
-
-//            if (subscribedSybmols.nonEmpty || sub_spds.nonEmpty) {
-//                req.clientActor ! JsonCallRsp()
-//            }
 
             val hash_code = (subscribedSybmols).toSeq
                             .sorted.mkString(",").hashCode.toString
@@ -191,11 +163,7 @@ class SubscriberActor extends FSM[Any, Any] {
     }
     
     whenUnhandled {
-//        case Event(_: KeepAlive, _) =>
-//            setTimer(TIMER_KeepAliveTimeout, TIMER_KeepAliveTimeout, 1 minutes, true)
-//            logger.info("keep alive")
-//            stay
-        
+       
         case Event(SessionActor.SessionTerminatedInd, _) if stateName != Unsubscribing =>
             logger.info("unhandled event, goto unsubscribe")
             goto (Unsubscribing)
@@ -279,22 +247,14 @@ class SubscriberActor extends FSM[Any, Any] {
 
             true
         }
-    }
-
-
-    
+    }    
 
 
     def publish(symbol: String, quote: MarketQuote) = {
 
-        //val ind = Jsq.QuoteInd.newBuilder().setSchemaId( schemaId )
-
         import IndicatorID._
 
         // TODO: publish only if any subscribed indicator has been changed
-
-        //val list = new InicatorList
-        //val q = mutable.HashMap[Int, Any]() // Use String -> Any instead?
 
         val indicators = mutable.ArrayBuffer[Int]()
         val values     = mutable.ArrayBuffer[Any]()

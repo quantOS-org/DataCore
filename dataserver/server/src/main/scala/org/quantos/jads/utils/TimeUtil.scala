@@ -195,8 +195,5 @@ object TimeUtil {
         val dt = date.getYear * 10000 + date.getMonthValue * 100 + date.getDayOfMonth
         dt
     }
-    
-//    val local_data = new LocalDate()
-//    TemporalAdjusters.
-    
+  
 }
