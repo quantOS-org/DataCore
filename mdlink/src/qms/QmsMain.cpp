@@ -56,26 +56,26 @@ namespace jzs {
         g_tables = new GlobalTables();
         g_tables->init_data();
 
-		MarketInfo * cfe_mkt = NULL;
+        MarketInfo * cfe_mkt = NULL;
 
         // load market
         int trading_day = g_tables->g_calendar->GetTradeDay(TimeUtil::dayMillis());
 
-		string path = SysConfig::getEtcDir() + "/market.csv";
-		CSVReader reader(path);
-		reader.LoadFile();
+        string path = SysConfig::getEtcDir() + "/market.csv";
+        CSVReader reader(path);
+        reader.LoadFile();
 
-		// skip first 
-		// "market","nationcode","timezone","marketcode","auctbeg1","auctend1","auctbeg2","auctend2","auctbeg3","auctend3","auctbeg4","auctend4"
-		for (int i = 1; i < reader.get_num_rows(); i++) {
+        // skip first 
+        // "market","nationcode","timezone","marketcode","auctbeg1","auctend1","auctbeg2","auctend2","auctbeg3","auctend3","auctbeg4","auctend4"
+        for (int i = 1; i < reader.get_num_rows(); i++) {
 
-			int marketid = atoi(reader.rows[i][0].c_str());
+            int marketid = atoi(reader.rows[i][0].c_str());
             if (marketid == 0) {
                 LOG(ERROR) << "Market id is 0";
                 continue;
             }
 
-			string s = trim(reader.rows[i][3].c_str());
+            string s = trim(reader.rows[i][3].c_str());
             string marketcode = s.c_str();
 
             if (marketcode == "") {
@@ -90,12 +90,12 @@ namespace jzs {
            
             bool time_frm_set = false;
 
-			int offset = 4;
+            int offset = 4;
             for (int i = 1; i <= 4; i++){
-				
-				int index = offset + (i - 1) * 2;
-				int auctbeg_t = atoi(reader.rows[i][index].c_str()) * 100 * 1000;
-				int auctend_t = atoi(reader.rows[i][index+1].c_str()) * 100 * 1000;
+                
+                int index = offset + (i - 1) * 2;
+                int auctbeg_t = atoi(reader.rows[i][index].c_str()) * 100 * 1000;
+                int auctend_t = atoi(reader.rows[i][index+1].c_str()) * 100 * 1000;
                 auctbeg_t = TimeUtil::TimeToMillis(auctbeg_t);
                 auctend_t = TimeUtil::TimeToMillis(auctend_t);
                 //if (TimeUtil::isInNightTime)
@@ -124,14 +124,14 @@ namespace jzs {
             AuctTime at;
             at.add_aucttime(TimeUtil::TimeToMillis( 93000 * 1000), TimeUtil::TimeToMillis(113000 * 1000));
             at.add_aucttime(TimeUtil::TimeToMillis(130000 * 1000), TimeUtil::TimeToMillis(150000 * 1000));
-			auto it = g_tables->g_mkt_inst_map.find(mktid);
-			if (it != g_tables->g_mkt_inst_map.end()) {
-				for (auto it_inst = it->second.begin(); it_inst != it->second.end(); it_inst++) {
-					if (it_inst->insttype == 101) { // INDEX FUTURE
-						cfe_mkt->add_special_aucttime(it_inst->jzcode, &at);
-					}
-				}
-			}    
+            auto it = g_tables->g_mkt_inst_map.find(mktid);
+            if (it != g_tables->g_mkt_inst_map.end()) {
+                for (auto it_inst = it->second.begin(); it_inst != it->second.end(); it_inst++) {
+                    if (it_inst->insttype == 101) { // INDEX FUTURE
+                        cfe_mkt->add_special_aucttime(it_inst->jzcode, &at);
+                    }
+                }
+            }    
         }
         g_markets = new string[g_market_map.size()];
         // mkt code 
@@ -148,51 +148,51 @@ namespace jzs {
         // 下面的代码修改成直接读取数据库
         int trading_day = g_calendar->GetTradeDay(TimeUtil::dayMillis());
 
-		string path = SysConfig::getEtcDir() + "/instrument.csv";
-		CSVReader reader(path);
-		reader.LoadFile();
+        string path = SysConfig::getEtcDir() + "/instrument.csv";
+        CSVReader reader(path);
+        reader.LoadFile();
 
-		// skip first
-		// "instcode","jzcode","targetjzcode","market","buylot","selllot","pricetick","multiplier","insttype","symbol"
-		for (int i = 1; i < reader.get_num_rows(); i++) {
+        // skip first
+        // "instcode","jzcode","targetjzcode","market","buylot","selllot","pricetick","multiplier","insttype","symbol"
+        for (int i = 1; i < reader.get_num_rows(); i++) {
 
-			string instcode = trim(reader.rows[i][0].c_str());
-			int jzcode = atoi(reader.rows[i][1].c_str());
-			int target_jzcode = atoi(reader.rows[i][2].c_str());
-			int mktid = atoi(reader.rows[i][3].c_str());
-			int buylot = atoi(reader.rows[i][4].c_str());
-			int selllot = atoi(reader.rows[i][5].c_str());
-			double pricetick = atof(reader.rows[i][6].c_str());
-			int multiplier = atoi(reader.rows[i][7].c_str());
-			int insttype = atoi(reader.rows[i][8].c_str());
-			string symbol = trim(reader.rows[i][9].c_str());
+            string instcode = trim(reader.rows[i][0].c_str());
+            int jzcode = atoi(reader.rows[i][1].c_str());
+            int target_jzcode = atoi(reader.rows[i][2].c_str());
+            int mktid = atoi(reader.rows[i][3].c_str());
+            int buylot = atoi(reader.rows[i][4].c_str());
+            int selllot = atoi(reader.rows[i][5].c_str());
+            double pricetick = atof(reader.rows[i][6].c_str());
+            int multiplier = atoi(reader.rows[i][7].c_str());
+            int insttype = atoi(reader.rows[i][8].c_str());
+            string symbol = trim(reader.rows[i][9].c_str());
 
             JzCodeInfo codeInfo;
             SymbolInfo symInfo;
-			InstInfo instInfo;
+            InstInfo instInfo;
 
             codeInfo.mktid = mktid;
             codeInfo.symbol = symbol;
 
-			symInfo.mktid = mktid;
+            symInfo.mktid = mktid;
             symInfo.jzcode = jzcode;
 
-			instInfo.instcode = instcode;
-			instInfo.symbol = symbol;
-			instInfo.jzcode = jzcode;
-			instInfo.insttype = insttype;
+            instInfo.instcode = instcode;
+            instInfo.symbol = symbol;
+            instInfo.jzcode = jzcode;
+            instInfo.insttype = insttype;
 
-			g_symbol_map[symbol] = symInfo;
+            g_symbol_map[symbol] = symInfo;
             g_jzcode_map[jzcode] = codeInfo;
-			auto it = g_mkt_inst_map.find(mktid);
-			if (it != g_mkt_inst_map.end()) {
-				it->second.push_back(instInfo);
-			}
-			else {
-				vector<InstInfo> infos;
-				infos.push_back(instInfo);
-				g_mkt_inst_map[mktid] = infos;
-			}			
+            auto it = g_mkt_inst_map.find(mktid);
+            if (it != g_mkt_inst_map.end()) {
+                it->second.push_back(instInfo);
+            }
+            else {
+                vector<InstInfo> infos;
+                infos.push_back(instInfo);
+                g_mkt_inst_map[mktid] = infos;
+            }            
         }
 
         LOG(INFO) << "Load " << g_jzcode_map.size() << " symbols";       

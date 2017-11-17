@@ -463,9 +463,9 @@ namespace jzs{
             LOG_EVERY_N(ERROR, 10) << "No quote data in MarketDataInd";
             return false;
         }
-		std::unique_lock<std::recursive_mutex> lck(m_mtx);
-		bool res = AppendQuote(quote, no_log);
-		return res;
+        std::unique_lock<std::recursive_mutex> lck(m_mtx);
+        bool res = AppendQuote(quote, no_log);
+        return res;
     }
 
     // Attention: make sure it has a lock before calling this function;

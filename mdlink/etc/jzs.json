@@ -32,12 +32,12 @@
                     "id": "future1",
                     "route": "CTP",
                     "front": [
-                        "xxxxxxxxxxxxxxx",
-                        "xxxxxxxxxxxxxxx"
+                        "180.168.146.187:10010",
+                        "180.168.146.187:10011"
                     ],
-                    "broker": "xxxxxx",
-                    "investor": "xxxxxx",
-                    "passwd": "xxxxxx",
+                    "broker": "9999",
+                    "investor": "xxxxx",
+                    "passwd": "xxxxx",
                     "udp": false,
                     "multicast": false
                 }
@@ -53,9 +53,9 @@
                     "id": "stock1",
                     "route": "TDF",
                     "addr": "xxx.xxx.xxx.xxx",
-                    "port": xxxxx,
+                    "port": xxxx,
                     "username": "TDXXXXXX",
-                    "passwd": "xxxxx",
+                    "passwd": "xxxxxx",
                     "markets": "SZ-2;SH-2;CF-2"
                 }
             ]

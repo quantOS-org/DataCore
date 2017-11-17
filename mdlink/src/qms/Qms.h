@@ -63,10 +63,10 @@ struct SymbolInfo {
 };
 
 struct InstInfo {
-	uint32_t jzcode;
-	string symbol;
-	uint32_t insttype;
-	string instcode;
+    uint32_t jzcode;
+    string symbol;
+    uint32_t insttype;
+    string instcode;
 };
 
 struct AuctTime {
@@ -165,7 +165,7 @@ class GlobalTables {
 public:
     map< string, SymbolInfo>     g_symbol_map;
     map< uint32_t, JzCodeInfo>   g_jzcode_map;   
-	map< uint32_t, vector<InstInfo>> g_mkt_inst_map;
+    map< uint32_t, vector<InstInfo>> g_mkt_inst_map;
     Calendar* g_calendar;
 
     GlobalTables() {      

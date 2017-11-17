@@ -18,8 +18,8 @@ set(SRC
     TypeUtil.h
     Calendar.h
     Calendar.cpp
-	csv-reader.h
-	csv-reader.cpp
+    csv-reader.h
+    csv-reader.cpp
     ../config/CXML.cpp
     ../config/CXML.h
     ../config/SysConfig.cpp

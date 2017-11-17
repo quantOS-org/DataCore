@@ -42,25 +42,25 @@ Calendar::~Calendar()
 
 Calendar::Calendar()
 {
-	// load calendar
-	{
-		int today = TimeUtil::date();
-		string path = SysConfig::getEtcDir() + "/calendar.csv";
-		CSVReader reader(path);
-		reader.LoadFile();
-		int i = 0;
-		// skip first line 
-		// "date"
-		for (i = 1; i < reader.get_num_rows(); i++) {
-			int dt = atoi(reader.rows[i][0].c_str());
-			if (dt >= today) {
-				break;
-			}
-		}
-		m_tradedays.push_back(atoi(reader.rows[i-1][0].c_str()));
-		m_tradedays.push_back(atoi(reader.rows[i][0].c_str()));
-		m_tradedays.push_back(atoi(reader.rows[i+1][0].c_str()));
-	}
+    // load calendar
+    {
+        int today = TimeUtil::date();
+        string path = SysConfig::getEtcDir() + "/calendar.csv";
+        CSVReader reader(path);
+        reader.LoadFile();
+        int i = 0;
+        // skip first line 
+        // "date"
+        for (i = 1; i < reader.get_num_rows(); i++) {
+            int dt = atoi(reader.rows[i][0].c_str());
+            if (dt >= today) {
+                break;
+            }
+        }
+        m_tradedays.push_back(atoi(reader.rows[i-1][0].c_str()));
+        m_tradedays.push_back(atoi(reader.rows[i][0].c_str()));
+        m_tradedays.push_back(atoi(reader.rows[i+1][0].c_str()));
+    }
 }
 
 // 根据当前日期和给出时间推出交易日

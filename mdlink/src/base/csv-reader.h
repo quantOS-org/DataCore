@@ -48,7 +48,7 @@ public:
 
     CSVReader(std::string file_loc);
     ~CSVReader();
-  	bool LoadFile(bool perserve_double_quotes = false);
+      bool LoadFile(bool perserve_double_quotes = false);
     int get_num_rows();
     int get_num_cols();
     LocationIndex FindString(std::string value, int start_row, int end_row, int start_col, int end_col);

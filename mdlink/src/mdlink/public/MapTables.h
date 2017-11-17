@@ -73,7 +73,7 @@ namespace jzs {
                 return Instrument();
             }
         }
-		string get_symbol(uint32_t jzcode, string def_value);
+        string get_symbol(uint32_t jzcode, string def_value);
         string get_market_name(int mkt) {
             auto it = m_markets.find(mkt);
             if (it != m_markets.end()) {

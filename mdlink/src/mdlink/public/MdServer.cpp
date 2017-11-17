@@ -48,8 +48,8 @@ namespace jzs {
             return false;
         }     
 
-		m_maptables = new MapTables();
-		m_maptables->init();
+        m_maptables = new MapTables();
+        m_maptables->init();
 
         if (do_publish) {
             m_pub = msgbus::Publisher::create(mdcfg.addr.c_str());

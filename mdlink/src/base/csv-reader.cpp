@@ -55,12 +55,12 @@ bool CSVReader::LoadFile(bool perserve_double_quotes)
 
 int CSVReader::get_num_rows()
 {
-	return this->num_rows_;
+    return this->num_rows_;
 }
 
 int CSVReader::get_num_cols()
 {
-	return this->num_cols_;
+    return this->num_cols_;
 }
 
 /*
@@ -73,43 +73,43 @@ int CSVReader::get_num_cols()
  */
 LocationIndex CSVReader::FindString(std::string value, int start_row, int end_row, int start_col, int end_col)
 {
-	if (start_row < 0) {
+    if (start_row < 0) {
         start_row = 0;
-	}
+    }
 
-	if (end_row < 0) {
+    if (end_row < 0) {
         end_row = this->get_num_rows() - 1;
-	}
+    }
 
-	if (start_col < 0) {
+    if (start_col < 0) {
         start_col = 0;
-	}
+    }
 
-	if (end_col < 0) {
+    if (end_col < 0) {
         end_col = this->get_num_cols() - 1;
-	}
+    }
 
-	// Search
+    // Search
 
-	LocationIndex index;
-	index.valid = false;
+    LocationIndex index;
+    index.valid = false;
 
-	for (int i = start_row; i <= end_row; i++) {
-		for (int j = start_col; j <= end_col; j++) {
-			if (this->rows[i][j] == value) {
-				index.row = i;
-				index.col = j;
-				index.valid = true;
-			}
-		}
-	}
+    for (int i = start_row; i <= end_row; i++) {
+        for (int j = start_col; j <= end_col; j++) {
+            if (this->rows[i][j] == value) {
+                index.row = i;
+                index.col = j;
+                index.valid = true;
+            }
+        }
+    }
 
-	return index;
+    return index;
 }
 
 LocationIndex CSVReader::FindString(std::string value)
 {
-	return FindString(value, -1, -1, -1, -1);
+    return FindString(value, -1, -1, -1, -1);
 }
 
 bool CSVReader::GenerateCols(std::string data)

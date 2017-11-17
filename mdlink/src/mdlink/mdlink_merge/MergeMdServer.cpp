@@ -193,7 +193,7 @@ void MergeMdServer::Run()
             }
         }
         auto quote = pop_info.last_quote;
-        string src = pop_info.last_source;		
+        string src = pop_info.last_source;        
         publish(pop_info.type, *quote);
     }
 }

@@ -501,7 +501,7 @@ void TdfMdServer::Run()
         setting.szSubScriptions = "";// "000001.SZ";
 
         setting.nTime = 0;
-		setting.nTypeFlags = 0; //(MSG_DATA_TRANSACTION | MSG_DATA_ORDERQUEUE | MSG_DATA_ORDER);
+        setting.nTypeFlags = 0; //(MSG_DATA_TRANSACTION | MSG_DATA_ORDERQUEUE | MSG_DATA_ORDER);
 
         TDF_ERR nErr = TDF_ERR_SUCCESS;
         THANDLE hTDF = TDF_Open(&setting, &nErr);
@@ -796,29 +796,29 @@ void TdfMdServer::OnMarketData(const TDF_MSG* pMsgHead)
     break;
 
     case MSG_DATA_FUTURE: 
-		break;
+        break;
 
     case MSG_DATA_INDEX: 
-		{
-			const TDF_INDEX_DATA* p = static_cast<const TDF_INDEX_DATA*>(pMsgHead->pData);
-			for (int i = 0; i < nItemCount; i++, p++) {
-				if (p->nTradingDay < m_today) {
-					LOG_EVERY_N(ERROR, 200) << "Drop yesteday data " << p->nTradingDay;
-					break;
-				}
+        {
+            const TDF_INDEX_DATA* p = static_cast<const TDF_INDEX_DATA*>(pMsgHead->pData);
+            for (int i = 0; i < nItemCount; i++, p++) {
+                if (p->nTradingDay < m_today) {
+                    LOG_EVERY_N(ERROR, 200) << "Drop yesteday data " << p->nTradingDay;
+                    break;
+                }
 
-				MarketQuote bk;
-				if (TdToJZS(p, &bk))
-					Publish(MarketDataType::MD_STK_L1, bk);
-			}
-		}
-		break;
+                MarketQuote bk;
+                if (TdToJZS(p, &bk))
+                    Publish(MarketDataType::MD_STK_L1, bk);
+            }
+        }
+        break;
     case MSG_DATA_TRANSACTION:
-		break;    
+        break;    
     case MSG_DATA_ORDERQUEUE:
         break;
     case MSG_DATA_ORDER:
-		break;
+        break;
     }
 }
 

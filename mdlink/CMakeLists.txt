@@ -107,6 +107,9 @@ install (PROGRAMS
     scripts/stop.sh
     scripts/start.sh
     scripts/start.bat
+    scripts/prepare_data.sh
+    scripts/prepare_data.bat
+    scripts/download.py
     DESTINATION scripts
 )
 

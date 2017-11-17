@@ -153,7 +153,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _Tp>
     inline void
     atomic_store_explicit(shared_ptr<_Tp>* __p, shared_ptr<_Tp> __r,
-			  memory_order)
+              memory_order)
     {
       _Sp_locker __lock{__p};
       __p->swap(__r); // use swap so that **__p not destroyed while lock held
@@ -167,8 +167,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _Tp, _Lock_policy _Lp>
     inline void
     atomic_store_explicit(__shared_ptr<_Tp, _Lp>* __p,
-			  __shared_ptr<_Tp, _Lp> __r,
-			  memory_order)
+              __shared_ptr<_Tp, _Lp> __r,
+              memory_order)
     {
       _Sp_locker __lock{__p};
       __p->swap(__r); // use swap so that **__p not destroyed while lock held
@@ -190,7 +190,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _Tp>
     inline shared_ptr<_Tp>
     atomic_exchange_explicit(shared_ptr<_Tp>* __p, shared_ptr<_Tp> __r,
-			     memory_order)
+                 memory_order)
     {
       _Sp_locker __lock{__p};
       __p->swap(__r);
@@ -202,14 +202,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     atomic_exchange(shared_ptr<_Tp>* __p, shared_ptr<_Tp> __r)
     {
       return std::atomic_exchange_explicit(__p, std::move(__r),
-					   memory_order_seq_cst);
+                       memory_order_seq_cst);
     }
 
   template<typename _Tp, _Lock_policy _Lp>
     inline __shared_ptr<_Tp, _Lp>
     atomic_exchange_explicit(__shared_ptr<_Tp, _Lp>* __p,
-			     __shared_ptr<_Tp, _Lp> __r,
-			     memory_order)
+                 __shared_ptr<_Tp, _Lp> __r,
+                 memory_order)
     {
       _Sp_locker __lock{__p};
       __p->swap(__r);
@@ -221,7 +221,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     atomic_exchange(__shared_ptr<_Tp, _Lp>* __p, __shared_ptr<_Tp, _Lp> __r)
     {
       return std::atomic_exchange_explicit(__p, std::move(__r),
-					   memory_order_seq_cst);
+                       memory_order_seq_cst);
     }
   // @}
 
@@ -239,20 +239,20 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _Tp>
     bool
     atomic_compare_exchange_strong_explicit(shared_ptr<_Tp>* __p,
-					    shared_ptr<_Tp>* __v,
-					    shared_ptr<_Tp> __w,
-					    memory_order,
-					    memory_order)
+                        shared_ptr<_Tp>* __v,
+                        shared_ptr<_Tp> __w,
+                        memory_order,
+                        memory_order)
     {
       shared_ptr<_Tp> __x; // goes out of scope after __lock
       _Sp_locker __lock{__p, __v};
       owner_less<shared_ptr<_Tp>> __less;
       if (*__p == *__v && !__less(*__p, *__v) && !__less(*__v, *__p))
-	{
-	  __x = std::move(*__p);
-	  *__p = std::move(__w);
-	  return true;
-	}
+    {
+      __x = std::move(*__p);
+      *__p = std::move(__w);
+      return true;
+    }
       __x = std::move(*__v);
       *__v = *__p;
       return false;
@@ -261,50 +261,50 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _Tp>
     inline bool
     atomic_compare_exchange_strong(shared_ptr<_Tp>* __p, shared_ptr<_Tp>* __v,
-				 shared_ptr<_Tp> __w)
+                 shared_ptr<_Tp> __w)
     {
       return std::atomic_compare_exchange_strong_explicit(__p, __v,
-	  std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
+      std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
     }
 
   template<typename _Tp>
     inline bool
     atomic_compare_exchange_weak_explicit(shared_ptr<_Tp>* __p,
-					  shared_ptr<_Tp>* __v,
-					  shared_ptr<_Tp> __w,
-					  memory_order __success,
-					  memory_order __failure)
+                      shared_ptr<_Tp>* __v,
+                      shared_ptr<_Tp> __w,
+                      memory_order __success,
+                      memory_order __failure)
     {
       return std::atomic_compare_exchange_strong_explicit(__p, __v,
-	  std::move(__w), __success, __failure);
+      std::move(__w), __success, __failure);
     }
 
   template<typename _Tp>
     inline bool
     atomic_compare_exchange_weak(shared_ptr<_Tp>* __p, shared_ptr<_Tp>* __v,
-				 shared_ptr<_Tp> __w)
+                 shared_ptr<_Tp> __w)
     {
       return std::atomic_compare_exchange_weak_explicit(__p, __v,
-	  std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
+      std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
     }
 
   template<typename _Tp, _Lock_policy _Lp>
     bool
     atomic_compare_exchange_strong_explicit(__shared_ptr<_Tp, _Lp>* __p,
-					    __shared_ptr<_Tp, _Lp>* __v,
-					    __shared_ptr<_Tp, _Lp> __w,
-					    memory_order,
-					    memory_order)
+                        __shared_ptr<_Tp, _Lp>* __v,
+                        __shared_ptr<_Tp, _Lp> __w,
+                        memory_order,
+                        memory_order)
     {
       __shared_ptr<_Tp, _Lp> __x; // goes out of scope after __lock
       _Sp_locker __lock{__p, __v};
       owner_less<__shared_ptr<_Tp, _Lp>> __less;
       if (*__p == *__v && !__less(*__p, *__v) && !__less(*__v, *__p))
-	{
-	  __x = std::move(*__p);
-	  *__p = std::move(__w);
-	  return true;
-	}
+    {
+      __x = std::move(*__p);
+      *__p = std::move(__w);
+      return true;
+    }
       __x = std::move(*__v);
       *__v = *__p;
       return false;
@@ -313,33 +313,33 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _Tp, _Lock_policy _Lp>
     inline bool
     atomic_compare_exchange_strong(__shared_ptr<_Tp, _Lp>* __p,
-				   __shared_ptr<_Tp, _Lp>* __v,
-				   __shared_ptr<_Tp, _Lp> __w)
+                   __shared_ptr<_Tp, _Lp>* __v,
+                   __shared_ptr<_Tp, _Lp> __w)
     {
       return std::atomic_compare_exchange_strong_explicit(__p, __v,
-	  std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
+      std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
     }
 
   template<typename _Tp, _Lock_policy _Lp>
     inline bool
     atomic_compare_exchange_weak_explicit(__shared_ptr<_Tp, _Lp>* __p,
-					  __shared_ptr<_Tp, _Lp>* __v,
-					  __shared_ptr<_Tp, _Lp> __w,
-					  memory_order __success,
-					  memory_order __failure)
+                      __shared_ptr<_Tp, _Lp>* __v,
+                      __shared_ptr<_Tp, _Lp> __w,
+                      memory_order __success,
+                      memory_order __failure)
     {
       return std::atomic_compare_exchange_strong_explicit(__p, __v,
-	  std::move(__w), __success, __failure);
+      std::move(__w), __success, __failure);
     }
 
   template<typename _Tp, _Lock_policy _Lp>
     inline bool
     atomic_compare_exchange_weak(__shared_ptr<_Tp, _Lp>* __p,
-				 __shared_ptr<_Tp, _Lp>* __v,
-				 __shared_ptr<_Tp, _Lp> __w)
+                 __shared_ptr<_Tp, _Lp>* __v,
+                 __shared_ptr<_Tp, _Lp> __w)
     {
       return std::atomic_compare_exchange_weak_explicit(__p, __v,
-	  std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
+      std::move(__w), memory_order_seq_cst, memory_order_seq_cst);
     }
   // @}
 

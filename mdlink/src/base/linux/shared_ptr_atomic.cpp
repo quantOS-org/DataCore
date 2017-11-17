@@ -48,8 +48,8 @@ namespace std _GLIBCXX_VISIBILITY(default)
   {
     if (__gthread_active_p())
       {
-	_M_key1 = _M_key2 = key(p);
-	get_mutex(_M_key1).lock();
+    _M_key1 = _M_key2 = key(p);
+    get_mutex(_M_key1).lock();
       }
     else
       _M_key1 = _M_key2 = invalid;
@@ -59,13 +59,13 @@ namespace std _GLIBCXX_VISIBILITY(default)
   {
     if (__gthread_active_p())
       {
-	_M_key1 = key(p1);
-	_M_key2 = key(p2);
-	if (_M_key2 < _M_key1)
-	  get_mutex(_M_key2).lock();
-	get_mutex(_M_key1).lock();
-	if (_M_key2 > _M_key1)
-	  get_mutex(_M_key2).lock();
+    _M_key1 = key(p1);
+    _M_key2 = key(p2);
+    if (_M_key2 < _M_key1)
+      get_mutex(_M_key2).lock();
+    get_mutex(_M_key1).lock();
+    if (_M_key2 > _M_key1)
+      get_mutex(_M_key2).lock();
       }
     else
       _M_key1 = _M_key2 = invalid;
@@ -75,9 +75,9 @@ namespace std _GLIBCXX_VISIBILITY(default)
   {
     if (_M_key1 != invalid)
       {
-	get_mutex(_M_key1).unlock();
-	if (_M_key2 != _M_key1)
-	  get_mutex(_M_key2).unlock();
+    get_mutex(_M_key1).unlock();
+    if (_M_key2 != _M_key1)
+      get_mutex(_M_key2).unlock();
       }
   }
 #endif
