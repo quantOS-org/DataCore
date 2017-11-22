@@ -41,6 +41,10 @@ void extract_contract(std::string instcode, std::string& commodity, std::string&
 
 std::string trim(const std::string& src);
 
+void split(const std::string& s, const std::string& delim, std::vector<std::string>& ss, bool trim = true);
+
+std::string remove_substr(std::string str, std::string sub);
+
 inline double toDouble(std::string str)
 {
     double data;

@@ -105,6 +105,29 @@ void extract_contract(std::string instcode, std::string& commodity, std::string&
     }
 }
 
+void split(const string& s, const string& delim,
+    vector<string>& ss, bool do_trim) {
+    tokenize(ss, s, delim);
+    if (do_trim) {
+        for (size_t i = 0; i < ss.size(); i++) {
+            ss[i] = trim(ss[i]);
+        }
+    }
+}
+
+std::string remove_substr(std::string str, std::string sub)
+{
+    size_t id = 0;
+    size_t size = sub.size();
+    id = str.find(sub, 0);
+    bool sub_found = false;
+    while (id != std::string::npos) {
+        str.erase(id, size);
+        id = str.find(sub);
+        sub_found = true;
+    }
+    return str;
+}
 //const string trim(const std::string& src, const std::string& spaces){
 //    std::string::size_type i, j;
 //
