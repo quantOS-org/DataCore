@@ -85,7 +85,7 @@ bool CtpMdServer::init_by_type(MdlinkCfg& mdcfg)
         return false;
     }
 
-    m_cfg = & mdvec[0];
+    m_cfg = mdvec[0];
     return true;
 }
 
@@ -94,15 +94,15 @@ void CtpMdServer::Run()
 {
     LoadSymbol();
 
-    string flow = SysConfig::getDataDir() + "/flow/md_" + m_cfg->id + "_";
+    string flow = SysConfig::getDataDir() + "/flow/md_" + m_cfg.id + "_";
     LOG(INFO) << "Use flow: " << flow;
 
-    userapi = CThostFtdcMdApi::CreateFtdcMdApi(flow.c_str(), m_cfg->udp, m_cfg->multicast);
+    userapi = CThostFtdcMdApi::CreateFtdcMdApi(flow.c_str(), m_cfg.udp, m_cfg.multicast);
     userapi->RegisterSpi(this);
 
-    for (int i = 0; i < m_cfg->front.size(); ++i) {
-        userapi->RegisterFront(const_cast<char*>(m_cfg->front[i].c_str()));
-        LOG(INFO) << "Use CTP front: " << m_cfg->front[i];
+    for (int i = 0; i < m_cfg.front.size(); ++i) {
+        userapi->RegisterFront(const_cast<char*>(m_cfg.front[i].c_str()));
+        LOG(INFO) << "Use CTP front: " << m_cfg.front[i];
      }
     userapi->Init();    
     userapi->Join();
@@ -114,8 +114,8 @@ void CtpMdServer::LoadSymbol()
 {
     m_subscribed.clear();
 
-    if (m_cfg->filter.size()) {
-        string file = SysConfig::getHomeDir() + "/" + m_cfg->filter;
+    if (m_cfg.filter.size()) {
+        string file = SysConfig::getHomeDir() + "/" + m_cfg.filter;
 
         FILE *fp = fopen(file.c_str(), "r+t");
         if (fp) {
@@ -166,13 +166,13 @@ void CtpMdServer::OnHeartBeatWarning(int nTimeLapse)
 void CtpMdServer::OnFrontConnected()
 {
     LOG(INFO) << "Connect to ctp sucessfully.";
-    LOG(INFO) << "Send login (" << m_cfg->broker << "," << m_cfg->investor << "," << m_cfg->passwd << ")";
+    LOG(INFO) << "Send login (" << m_cfg.broker << "," << m_cfg.investor << "," << m_cfg.passwd << ")";
 
     CThostFtdcReqUserLoginField req;
     memset(&req, 0, sizeof(req));
-    strcpy(req.BrokerID, m_cfg->broker.c_str());
-    strcpy(req.UserID,   m_cfg->investor.c_str());
-    strcpy(req.Password, m_cfg->passwd.c_str());
+    strcpy(req.BrokerID, m_cfg.broker.c_str());
+    strcpy(req.UserID,   m_cfg.investor.c_str());
+    strcpy(req.Password, m_cfg.passwd.c_str());
     int ret = userapi->ReqUserLogin(&req, ++reqid);
     
     // FIXME: should reconnect later instead of ASSERT
@@ -186,7 +186,7 @@ void CtpMdServer::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
         LOG(INFO) << "Login to ctp success. trading day=" << pRspUserLogin->TradingDay;
     }
     string time(TimeUtil::timestr());
-    string dbg_log = SysConfig::getDataDir() + "/log/ctpmd_" + m_cfg->id + "_"+ time + "_sub.txt";
+    string dbg_log = SysConfig::getDataDir() + "/log/ctpmd_" + m_cfg.id + "_"+ time + "_sub.txt";
     LOG(INFO) << "Save subscribed list to " << dbg_log;
     fstream out;
     out.open(dbg_log, ios::trunc | ios::out);

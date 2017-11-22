@@ -38,7 +38,7 @@ namespace jzs
     private:
         int reqid;
         CThostFtdcMdApi* userapi;
-        MdCfg* m_cfg;
+        MdCfg m_cfg;
         std::vector<std::string> m_subscribed;
 
     public:

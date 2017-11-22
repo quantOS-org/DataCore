@@ -46,7 +46,7 @@ namespace jzs{
         void Run();
         
     private:
-        const MdCfg* m_cfg;        
+        MdCfg m_cfg;        
         msgbus::Subscriber*  m_up_mdlink;    
         std::thread* m_thread;
     };

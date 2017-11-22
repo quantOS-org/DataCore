@@ -59,7 +59,7 @@ static std::mutex g_mutex;
 MdClient::MdClient(const MdCfg* cfg) :   
     m_thread(nullptr)
 {
-    m_cfg = cfg;
+    m_cfg = *cfg;
 }
 
 MdClient::~MdClient()
@@ -128,7 +128,7 @@ void MdClient::on_topic(const Msg& msg)
 
 void MdClient::Run()
 {
-    string up_addr = m_cfg->addr;
+    string up_addr = m_cfg.addr;
 
     if (up_addr.size() == 0) {
         LOG(FATAL) << "FWD mkdlik addre is empty";
@@ -193,7 +193,7 @@ void MergeMdServer::Run()
             }
         }
         auto quote = pop_info.last_quote;
-        string src = pop_info.last_source;        
+        string src = pop_info.last_source;		
         publish(pop_info.type, *quote);
     }
 }

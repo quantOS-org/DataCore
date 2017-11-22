@@ -116,8 +116,7 @@ static string TDIndexCode_to_JZSymbol(const char* tdcode)
     }
 }
 
-TdfMdServer::TdfMdServer():
-    m_cfg(nullptr),
+TdfMdServer::TdfMdServer(): 
     m_reqid(0),
     m_thread(nullptr),
     m_shouldExit(false),
@@ -142,7 +141,7 @@ bool TdfMdServer::init_by_type(MdlinkCfg& mdcfg)
         LOG(FATAL) << "More than one ctp sources are given";
         return false;
     }
-    m_cfg = &mdvec[0];
+    m_cfg = mdvec[0];
     return true;
 }
 
@@ -474,15 +473,15 @@ void TdfMdServer::Run()
         }
 
         // Connect
-        if (m_cfg->addr.size()==0 || m_cfg->port <=0 ||
-            m_cfg->username.size()==0 || m_cfg->passwd.size()==0 ||
-            m_cfg->markets.size()==0 ) {
+        if (m_cfg.addr.size()==0 || m_cfg.port <=0 ||
+            m_cfg.username.size()==0 || m_cfg.passwd.size()==0 ||
+            m_cfg.markets.size()==0 ) {
             printf("TDF configuration is wrong!\naddr=%s\nport=%d\nusername=%s\npasswd=%s\nmarkets=%s\n",
-                   m_cfg->addr.c_str(),
-                   m_cfg->port,
-                   m_cfg->username.c_str(),
-                   m_cfg->passwd.c_str(),
-                   m_cfg->markets.c_str() );
+                   m_cfg.addr.c_str(),
+                   m_cfg.port,
+                   m_cfg.username.c_str(),
+                   m_cfg.passwd.c_str(),
+                   m_cfg.markets.c_str() );
 
             exit(-1);
         }
@@ -491,17 +490,17 @@ void TdfMdServer::Run()
 
         memset(&setting, 0, sizeof(setting));
         setting.nConnectionID = id;
-        strcpy(setting.szIp,    m_cfg->addr.c_str() );//"114.80.154.34"
-        sprintf(setting.szPort, "%d", m_cfg->port); //6231
-        strcpy(setting.szUser,  m_cfg->username.c_str() ) ;//
-        strcpy(setting.szPwd,   m_cfg->passwd.c_str() ); //
+        strcpy(setting.szIp,    m_cfg.addr.c_str() );//"114.80.154.34"
+        sprintf(setting.szPort, "%d", m_cfg.port); //6231
+        strcpy(setting.szUser,  m_cfg.username.c_str() ) ;//
+        strcpy(setting.szPwd,   m_cfg.passwd.c_str() ); //
         setting.pfnMsgHandler = RecvData;
         setting.pfnSysMsgNotify = RecvSys;
-        setting.szMarkets = m_cfg->markets.c_str(); //"SZ;SH;CF";
+        setting.szMarkets = m_cfg.markets.c_str(); //"SZ;SH;CF";
         setting.szSubScriptions = "";// "000001.SZ";
 
         setting.nTime = 0;
-        setting.nTypeFlags = 0; //(MSG_DATA_TRANSACTION | MSG_DATA_ORDERQUEUE | MSG_DATA_ORDER);
+		setting.nTypeFlags = 0; //(MSG_DATA_TRANSACTION | MSG_DATA_ORDERQUEUE | MSG_DATA_ORDER);
 
         TDF_ERR nErr = TDF_ERR_SUCCESS;
         THANDLE hTDF = TDF_Open(&setting, &nErr);
@@ -528,12 +527,12 @@ void TdfMdServer::Run()
 
 void TdfMdServer::LoadSymbol()
 {
-    if (m_cfg->filter.empty()){
+    if (m_cfg.filter.empty()){
         LOG(WARNING) << "Empty filter list. Receive all data";
         return;
     }
 
-    string symbol_file = SysConfig::getHomeDir() + "/" + string(m_cfg->filter.c_str());
+    string symbol_file = SysConfig::getHomeDir() + "/" + string(m_cfg.filter.c_str());
     
     FILE *fp = fopen(symbol_file.c_str(), "r+");
     if (!fp) {

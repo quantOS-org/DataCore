@@ -64,7 +64,7 @@ namespace jzs{
         string build_ct_filename(const string& mkt, int tradedate);
 
     private:
-        MdCfg* m_cfg;
+        MdCfg m_cfg;
         std::thread* m_thread;
         map<string, TdfMarketInfo> m_market_infos;
 
