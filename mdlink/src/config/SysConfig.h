@@ -61,6 +61,7 @@ namespace jzs
         int port;
         string username;
         string markets;
+        string insttypes;
         
     };
 
