@@ -93,6 +93,7 @@ namespace jzs {
                 inst.insttype = insttype;
                 inst.symbol = symbol;
                 inst.target_jzcode = target_jzcode;
+                inst.instcode = instcode;
 
                 m_jzcode_map[symbol] = jzcode;
                 g_jzcode_to_symbol[jzcode] = symbol;
@@ -122,9 +123,7 @@ namespace jzs {
                     g_ctpcode_map[ss[0]] = jzcode;
                     //    LOG(INFO) << "instrument: " << jzcode << " " << instcode;
                 }
-
             }
-
         }
 
         for (auto& e : m_jzcode_map) {

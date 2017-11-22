@@ -50,6 +50,7 @@ namespace jzs {
         int      insttype;
         int      target_jzcode;
         double   pricetick;
+        string   instcode;
         string   symbol; 
         Instrument():
             init(false)
@@ -83,7 +84,6 @@ namespace jzs {
                 return "";
             }
         }
-        
 
         std::map< string, vector<string> > m_mkt_instcodes_map; // mkt -> instcode vector
         std::map< string, uint32_t> m_jzcode_map;       // IF1508.CFE -> int
