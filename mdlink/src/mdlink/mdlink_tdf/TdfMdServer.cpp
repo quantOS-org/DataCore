@@ -500,7 +500,7 @@ void TdfMdServer::Run()
         setting.szSubScriptions = "";// "000001.SZ";
 
         setting.nTime = 0;
-		setting.nTypeFlags = 0; //(MSG_DATA_TRANSACTION | MSG_DATA_ORDERQUEUE | MSG_DATA_ORDER);
+        setting.nTypeFlags = 0; //(MSG_DATA_TRANSACTION | MSG_DATA_ORDERQUEUE | MSG_DATA_ORDER);
 
         TDF_ERR nErr = TDF_ERR_SUCCESS;
         THANDLE hTDF = TDF_Open(&setting, &nErr);

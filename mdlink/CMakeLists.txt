@@ -77,6 +77,7 @@ add_subdirectory(src/msgbus)
 add_subdirectory(src/mdlink/mdlink_merge)
 add_subdirectory(src/mdlink/mdlink_ctp)
 add_subdirectory(src/mdlink/mdlink_tdf)
+add_subdirectory(src/mdlink/mdlink_sina)
 add_subdirectory(src/qms)
 add_subdirectory(src/client)
 add_subdirectory(src/protocol)
@@ -107,9 +108,9 @@ install (PROGRAMS
     scripts/stop.sh
     scripts/start.sh
     scripts/start.bat
-    scripts/prepare_data.sh
-    scripts/prepare_data.bat
     scripts/download.py
+    scripts/prepare_data.bat
+    scripts/prepare_data.sh
     DESTINATION scripts
 )
 
@@ -132,7 +133,6 @@ else()
   install (FILES
     deps/ctp/v6.3.6_win/thostmduserapi.dll
     deps/tdf/win32/lib/TDFAPI30.dll
-
     DESTINATION ${LIB_PATH}
   )
 
