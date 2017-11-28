@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="E:\Documents\Xing\quantOS\DataCore\mdlink\deps\jsoncpp\jsoncpp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\public\MapTables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\public\MdServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\mdlink-tencent\TencentApi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\mdlink-tencent\TencentMdServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\mdlink-tencent\MdLinkMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="E:\Documents\Xing\quantOS\DataCore\mdlink\deps\zmq\zhelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\public\MapTables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\public\MdServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\mdlink-tencent\TencentApi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\mdlink-tencent\TencentMdServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\mdlink-tencent\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0DFF3B6B-9127-3E7D-AA8A-6981A36C20EE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{FBD62AD2-6306-3A2C-AE12-35A22ED2038A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

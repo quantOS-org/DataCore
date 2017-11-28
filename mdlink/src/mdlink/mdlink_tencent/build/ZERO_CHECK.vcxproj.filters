@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="E:\Documents\Xing\quantOS\DataCore\mdlink\src\mdlink\mdlink-tencent\build\CMakeFiles\6375786f84ed193fd44d33a9d7bf04a3\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{F7F6FD83-D35B-38A1-BBD8-CA54951C3BD9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
