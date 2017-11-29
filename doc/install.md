@@ -36,7 +36,7 @@ DataApi下载请参见: [https://github.com/quantOS-org/DataApi](https://github.
 from . import DataApi
 
 api = DataApi(addr="tcp://data.tushare.org:8910")
-df, msg = api.login("username", "password")
+df, msg = api.login("username", "password") // 请在www.quantos.org注册用户
 
 symbol = 'T1712.CFE, TF1712.CFE, rb1712.SHF'
 fields = 'open,high,low,last,volume'
@@ -46,6 +46,9 @@ df, msg = api.quote(symbol=symbol, fields=fields)
 print(df)
 print(msg)
 ```
+
+**特别说明** 一般用户安装完DataApi之后，即可访问data.tushare.org获取数据，无需安装DataCore服务端。需要本地化部署的用户，才需要进入下面的步骤。
+
 
 ## 服务端安装
 
