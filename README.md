@@ -46,9 +46,9 @@ QMS缓存行情数据，生成分钟线，提供快照、分钟线查询服务�
 
 参见[安装指南](https://github.com/quantOS-org/DataCore/blob/master/doc/install.md)
 
-# API Reference
+# 快速入门&API使用指南
 
-参见[API使用指南](https://github.com/quantOS-org/DataCore/blob/master/doc/api_ref.md)
+参见[快速入门&API使用指南](https://github.com/quantOS-org/DataCore/blob/master/doc/api_ref.md)
 
 # Contribute
 

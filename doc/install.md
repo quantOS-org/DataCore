@@ -8,7 +8,7 @@
 
 打开上面的网址，选择相应的操作系统，确定要按照的Python版本，一般建议用Python 2.7。
 
-下载完成以后，按照图形界面步骤完成安装。在默认情况下，Anaconda会自动设置PATH环境。
+下载完成以后，按照图形界面步骤完成安装。在默认情况下，Anaconda不会自动设置PATH环境，请选择“add Anaconda to system PATH”选项。
 
 ### 安装依赖包
 
@@ -24,6 +24,27 @@
 ```bash
 pip install msgpack_python-0.4.8-cp27-cp27m-win_amd64.whl 
 pip install python_snappy-0.5.1-cp27-cp27m-win_amd64.whl
+```
+
+### 下载DataApi
+
+DataApi下载请参见: [https://github.com/quantOS-org/DataApi](https://github.com/quantOS-org/DataApi)
+
+### 开始使用DataApi
+
+```python
+from . import DataApi
+
+api = DataApi(addr="tcp://data.tushare.org:8910")
+df, msg = api.login("username", "password")
+
+symbol = 'T1712.CFE, TF1712.CFE, rb1712.SHF'
+fields = 'open,high,low,last,volume'
+
+# 获取实时行情
+df, msg = api.quote(symbol=symbol, fields=fields)
+print(df)
+print(msg)
 ```
 
 ## 服务端安装
