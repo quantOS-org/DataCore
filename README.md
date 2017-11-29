@@ -1,7 +1,7 @@
 # Introduction 
 
 DataCore是一款企业级开源量化数据系统，通过标准化接口提供高速实时行情、历史行情和参考数据等核心服务，覆盖股票、商品期货、股指期货、国债期货等品种，适配CTP、万得、聚源、Tushare等各类数据。
-[](https://github.com/quantOS-org/DataCore/blob/master/doc/img/datacore.png)
+[](https://raw.githubusercontent.com/quantOS-org/DataCore/blob/master/doc/img/datacore.png)
 
 # Features 
 
