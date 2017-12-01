@@ -68,24 +68,14 @@ string TencentApi::download(const vector<string>& codes)
 
 static inline int parse_date(const string& date)
 {
-    vector<string> ss;
-    split(date, "-", ss);
-    if (ss.size() != 3) return 0;
-
-    int v;
-    v = atoi(ss[0].c_str()) * 10000 + atoi(ss[1].c_str()) * 100 + atoi(ss[2].c_str());
-    return v;
+	if (date.length() != 8) return 0;
+	return atoi(date.c_str());
 }
 
 static inline int parse_time(const string& time)
 {
-    vector<string> ss;
-    split(time, ":", ss);
-    if (ss.size() != 3) return 0;
-
-    int v;
-    v = atoi(ss[0].c_str()) * 10000 + atoi(ss[1].c_str()) * 100 + atoi(ss[2].c_str());
-    return v * 1000;
+	if (time.length() != 6) return 0;
+	return atoi(time.c_str()) *1000;
 }
 
 static inline shared_ptr<MarketQuote> parse_quote(const string& raw_line)
@@ -119,44 +109,50 @@ static inline shared_ptr<MarketQuote> parse_quote(const string& raw_line)
         string values_str = tmp[1];
         vector<string> values;
 
-        split(values_str, ",", values);
+        split(values_str, "~", values);
         if (values.size() == 0) {
             return nullptr;
         }
-        int i = 1;
-        quote->open = atof(values[i++].c_str());
-        quote->pre_close = atof(values[i++].c_str());
-        quote->last     = atof(values[i++].c_str());
+		int i = 3;
+		quote->last = atof(values[i++].c_str());
+		quote->pre_close = atof(values[i++].c_str());
+		quote->open = atof(values[i++].c_str());
+		quote->volume = atoll(values[i++].c_str()) * 100;
+		i += 2; // ignore the outer, inner
+
+		quote->bid1 = atof(values[i++].c_str());
+		quote->bid_vol1 = atoi(values[i++].c_str()) * 100;
+		quote->bid2 = atof(values[i++].c_str());
+		quote->bid_vol2 = atoi(values[i++].c_str()) * 100;
+		quote->bid3 = atof(values[i++].c_str());
+		quote->bid_vol3 = atoi(values[i++].c_str()) * 100;
+		quote->bid4 = atof(values[i++].c_str());
+		quote->bid_vol4 = atoi(values[i++].c_str()) * 100;
+		quote->bid5 = atof(values[i++].c_str());
+		quote->bid_vol5 = atoi(values[i++].c_str()) * 100;
+
+		quote->ask1 = atof(values[i++].c_str());
+		quote->ask_vol1 = atoi(values[i++].c_str()) * 100;
+		quote->ask2 = atof(values[i++].c_str());
+		quote->ask_vol2 = atoi(values[i++].c_str()) * 100;
+		quote->ask3 = atof(values[i++].c_str());
+		quote->ask_vol3 = atoi(values[i++].c_str()) * 100;
+		quote->ask4 = atof(values[i++].c_str());
+		quote->ask_vol4 = atoi(values[i++].c_str()) * 100;
+		quote->ask5 = atof(values[i++].c_str());
+		quote->ask_vol5 = atoi(values[i++].c_str()) * 100;
+		i += 1; // ignore last transactions
+
+		quote->date = atoi(values[i].substr(0, 8).c_str());
+		quote->time = atoi(values[i++].substr(8, 6).c_str())*1000;
+		i += 2; // ignore ups and downs
+
         quote->high     = atof(values[i++].c_str());
         quote->low      = atof(values[i++].c_str());
-        i += 2; // ignore bid1,ask1
-        quote->volume   = atoll(values[i++].c_str());
-        quote->turnover = atoll(values[i++].c_str());
+        i += 2; // ignore transaction, vol
 
-        quote->bid_vol1 = atoi(values[i++].c_str());
-        quote->bid1     = atof(values[i++].c_str());
-        quote->bid_vol2 = atoi(values[i++].c_str());
-        quote->bid2     = atof(values[i++].c_str());
-        quote->bid_vol3 = atoi(values[i++].c_str());
-        quote->bid3     = atof(values[i++].c_str());
-        quote->bid_vol4 = atoi(values[i++].c_str());
-        quote->bid4     = atof(values[i++].c_str());
-        quote->bid_vol5 = atoi(values[i++].c_str());
-        quote->bid5     = atof(values[i++].c_str());
+        quote->turnover = atoll(values[i++].c_str())*10000;
 
-        quote->ask_vol1 = atoi(values[i++].c_str());
-        quote->ask1     = atof(values[i++].c_str());
-        quote->ask_vol2 = atoi(values[i++].c_str());
-        quote->ask2     = atof(values[i++].c_str());
-        quote->ask_vol3 = atoi(values[i++].c_str());
-        quote->ask3     = atof(values[i++].c_str());
-        quote->ask_vol4 = atoi(values[i++].c_str());
-        quote->ask4     = atof(values[i++].c_str());
-        quote->ask_vol5 = atoi(values[i++].c_str());
-        quote->ask5     = atof(values[i++].c_str());
-
-        quote->date = parse_date(values[i++]);
-        quote->time = parse_time(values[i++]);
     }
     return quote;
 }
@@ -169,7 +165,7 @@ bool TencentApi::get_quotes(const vector<string>& codes, vector<shared_ptr<Marke
     vector<string> lines;
     split(content, ";", lines);
     for (string line : lines) {
-        if (strncmp(line.c_str(), "var", 3) != 0) continue;        
+        if (strncmp(line.c_str(), "v", 1) != 0) continue;        
         auto q = parse_quote(trim(line));
         if (q)
             quotes->push_back(q);

@@ -1,5 +1,5 @@
-#ifndef JZS_SINAMDSERVER_H
-#define JZS_SINAMDSERVER_H
+#ifndef JZS_TENCENTMDSERVER_H
+#define JZS_TENCENTMDSERVER_H
 #include <vector>
 #include <string>
 

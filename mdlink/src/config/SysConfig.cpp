@@ -162,7 +162,15 @@ namespace jzs
                             LOG(INFO) << "\taddr: " << source["addr"].asString() << endl;
                             LOG(INFO) << "\tinsttypes: " << source["insttypes"].asString() << endl;
                             LOG(INFO) << "\tmarkets: " << source["markets"].asString() << endl;
-                        }
+						}
+						else if (cfg.route == "TENCENT") {
+							svrcfg.addr = source["addr"].asString();
+							svrcfg.markets = source["markets"].asString();
+							svrcfg.insttypes = source["insttypes"].asString();
+							LOG(INFO) << "\taddr: " << source["addr"].asString() << endl;
+							LOG(INFO) << "\tinsttypes: " << source["insttypes"].asString() << endl;
+							LOG(INFO) << "\tmarkets: " << source["markets"].asString() << endl;
+						}
                         cfg.mdvec.push_back(svrcfg);
                     }
                     md = cfg;

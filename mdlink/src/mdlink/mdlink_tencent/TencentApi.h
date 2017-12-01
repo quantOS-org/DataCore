@@ -1,5 +1,5 @@
-#ifndef _SINA_API_H
-#define _SINA_API_H
+#ifndef _TENCENT_API_H
+#define _TENCENT_API_H
 
 
 #include <memory>
@@ -50,9 +50,7 @@ namespace tencent_api {
 
     class TencentApi {
     public:
-
         TencentApi();
-
         ~TencentApi();
         void set_url(string url) { m_url = url; }
         bool get_quotes(const vector<string>& codes, vector<shared_ptr<MarketQuote>>* quotes);

@@ -33,10 +33,11 @@ using namespace jzs::msgbus;
 using namespace tencent_api;
 void test_tencent()
 {
+	string url_test = "http://qt.gtimg.cn/q=";
     tencent_api::TencentApi api;
+	api.set_url(url_test);
 
     vector<shared_ptr<tencent_api::MarketQuote>> quotes;
-
 
     vector<string> codes;
     codes.push_back("sz000001");
@@ -45,6 +46,7 @@ void test_tencent()
     codes.push_back("sz399001");
     api.get_quotes(codes, &quotes);
 
+	cout << "test tencent\n";
     for (auto q : quotes) {
         cout << q->code << "," << q->date << "," << q->time << "," << q->last << "," << q->volume << endl;
     }
@@ -53,7 +55,7 @@ void test_tencent()
 
 int main(int argc, char* argv[])
 {
-    string mdid;
+	string mdid;
     if (argc == 2) {
         mdid = string(argv[1]);
         init(argv[1]);
@@ -77,7 +79,7 @@ int main(int argc, char* argv[])
         auto next_time = chrono::system_clock::now() + chrono::seconds(5);
         while (chrono::system_clock::now() < next_time)
             this_thread::sleep_until(next_time);
-        svr->ShowStatus();
+		svr->ShowStatus();
     }
     return 0;
 }

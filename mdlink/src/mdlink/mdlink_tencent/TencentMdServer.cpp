@@ -28,8 +28,8 @@ const int sleep_time = 200; //ms
 
 bool TencentMdServer::init_by_type(MdlinkCfg& mdcfg)
 {
-    if (mdcfg.route != "SINA") {
-        LOG(FATAL) << "Error md type " << mdcfg.route << " (SINA expected)";
+    if (mdcfg.route != "TENCENT") {
+        LOG(FATAL) << "Error md type " << mdcfg.route << " (TENCENT expected)";
         return false;
     }
     vector<MdCfg> &mdvec = mdcfg.mdvec;

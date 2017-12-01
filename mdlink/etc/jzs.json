@@ -20,7 +20,8 @@
             "sources": [
                 { "addr": "tcp://127.0.0.1:10001", "id": "future1" },
                 { "addr": "tcp://127.0.0.1:10002", "id": "stock1" },
-                { "addr": "tcp://127.0.0.1:10003", "id": "stock2" }
+                { "addr": "tcp://127.0.0.1:10003", "id": "stock2" },
+                { "addr": "tcp://127.0.0.1:10004", "id": "stock3" }
             ]
         },
 
@@ -71,6 +72,21 @@
                     "id": "stock2",
                     "route": "SINA",
                     "addr": "http://hq.sinajs.cn/list=",
+                    "markets": "SZ;SH;",
+                    "insttypes": "1;2;3;4;5;100;"
+                }
+            ]
+        },
+		
+        "stock3": {
+            "pub_addr": "tcp://0.0.0.0:10004",
+            "route": "TENCENT",
+            "source_id": 4,
+            "sources": [
+                {
+                    "id": "stock3",
+                    "route": "TENCENT",
+                    "addr": "http://qt.gtimg.cn/q=",
                     "markets": "SZ;SH;",
                     "insttypes": "1;2;3;4;5;100;"
                 }
