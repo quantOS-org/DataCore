@@ -101,7 +101,7 @@ api.login("demo", "666666") # 连接自己启动的DataServer时，帐号密码�
 
 ```python
 df, msg = api.quote(
-                view="000001.SH, cu1709.SHF", 
+                symbol="000001.SH, cu1709.SHF", 
                 fields="open,high,low,last,volume")
 ```
 
