@@ -78,7 +78,10 @@ add_subdirectory(src/mdlink/mdlink_merge)
 add_subdirectory(src/mdlink/mdlink_ctp)
 add_subdirectory(src/mdlink/mdlink_tdf)
 add_subdirectory(src/mdlink/mdlink_sina)
+add_subdirectory(src/mdlink/mdlink_tencent)
 add_subdirectory(src/qms)
+#add_subdirectory(src/tkreader)
+add_subdirectory(src/client)
 add_subdirectory(src/protocol)
 
 # TODO: move to each module
