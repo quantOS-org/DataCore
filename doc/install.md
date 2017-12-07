@@ -33,10 +33,10 @@ DataApi下载请参见: [https://github.com/quantOS-org/DataApi](https://github.
 ### 开始使用DataApi
 
 ```python
-from . import DataApi
+from DataApi import DataApi  # 这里假设项目目录名为DataApi, 且存放在工作目录下
 
 api = DataApi(addr="tcp://data.tushare.org:8910")
-df, msg = api.login("username", "password") // 请在www.quantos.org注册用户
+df, msg = api.login("phone", "token") // 请在www.quantos.org注册用户
 
 symbol = 'T1712.CFE, TF1712.CFE, rb1712.SHF'
 fields = 'open,high,low,last,volume'
