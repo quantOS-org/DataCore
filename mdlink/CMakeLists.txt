@@ -86,16 +86,6 @@ add_subdirectory(src/protocol)
 
 # TODO: move to each module
 
-install(FILES
-    src/protocol/py/jzs_pb2.py
-    src/protocol/py/qms_pb2.py
-    src/protocol/py/md_pb2.py
-    DESTINATION client/py/jzs )
-
-install(DIRECTORY
-    src/protocol/cpp
-    DESTINATION client/cpp/include/protocol/ )
-
 install (FILES
     etc/jzs.json
     etc/market.csv
