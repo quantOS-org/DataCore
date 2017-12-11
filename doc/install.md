@@ -52,6 +52,12 @@ print(msg)
 
 ## 服务端安装
 
+### 0. 依赖包安装
+
+#### mdlink
+mdlink运行需要zeromq(推荐版本4.0.7)和protobuf(推荐版本2.5.0)，windows版本安装包已经自带这两个依赖包，但linux版需要用户先行安装这两个c++包。
+
+#### DataServer
 DataServer由Scala开发，需要安装JDK8才能运行，建议从[该网页](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)下载安装。
 
 ### 1. 准备行情源
