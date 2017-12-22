@@ -357,7 +357,7 @@ df,msg = api.bar_quote(
 
 ### 参考数据查询 query
 
-参考数据查询，输入查询类型及查询参数，返回结果为dataframe格式。
+参考数据查询，输入查询类型及查询参数，返回结果为dataframe格式。具体查询方法参见[tushare网站](http://tushare.org/pro)。
 
 输入参数：
 
