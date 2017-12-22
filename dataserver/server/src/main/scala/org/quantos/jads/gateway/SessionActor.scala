@@ -21,18 +21,16 @@ package org.quantos.jads.gateway
 
 import java.util.concurrent.ConcurrentHashMap
 
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{Actor, ActorRef}
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import org.quantos.jads.Config
 import org.quantos.jads.utils.CommonRequestHandler
 import org.quantos.utils.jrpc.JsonHelper
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
-import scala.concurrent.duration.{DurationInt, _}
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.sql.{Connection, DriverManager}
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import org.quantos.jads.Config
+import scala.concurrent.duration.{DurationInt, _}
 
 object SessionActor {
 
@@ -288,7 +286,11 @@ class SessionActor extends Actor with CommonRequestHandler {
         val removed = session_mgr.check()
         for ( client <- removed) {
             val subscriber = this.subscriber_map.getOrElse(client, null)
-            for ( sub <- subscriber) sub ! SessionTerminatedInd(client)
+            if(subscriber == null ) {
+                logger.debug(s"Can't find ${client}'s subscriber")
+            } else {
+                for (sub <- subscriber) sub ! SessionTerminatedInd(client)
+            }
         }
     }
 }
