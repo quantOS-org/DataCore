@@ -393,8 +393,8 @@ class tk2bar(object):
 
                 
 if __name__ == '__main__':   
-    user = "18018563813"
-    passwd = "eyJhbGciOiJIUzI1NiJ9.eyJjcmVhdGVfdGltZSI6IjE1MTIwMjA0OTQwMTQiLCJpc3MiOiJhdXRoMCIsImlkIjoiMTgwMTg1NjM4MTMifQ.7OlcRB3n9zJMg3Jl-9xG3sbDOhmLkp_bu46dyT5od6s"           
+    user = "phone number"
+    passwd = "token number"           
     convert = tk2bar(user,passwd)
     try :
         convert.tick2bar('./SHF20171218.tk', 20171218, 'SHF','1M','./')
