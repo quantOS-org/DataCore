@@ -389,7 +389,8 @@ class tk2bar(object):
             barlist['low'][id] = last
         barlist['close'][id] = last
         for field in update_fields:
-            barlist[field][id] = tk[field]        
+            if tk.has_key(field):
+                barlist[field][id] = tk[field]        
 
                 
 if __name__ == '__main__':   
