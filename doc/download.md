@@ -4,7 +4,7 @@
 
 ### 实时行情
 - [mdlink-1.2-win32.7z](http://www.quantos.org/downloads/datacore/mdlink-1.2-win32.7z)
-- [mdlink-1.2-win64.7z](http://www.quantos.org/downloads/datacore/mdlink-1.2-win32.7z)
+- [mdlink-1.2-win64.7z](http://www.quantos.org/downloads/datacore/mdlink-1.2-win64.7z)
 - [mdlink-1.2-linux.7z](http://www.quantos.org/downloads/datacore/mdlink-1.2-linux.7z)
 
 ### 数据服务
