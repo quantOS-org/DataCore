@@ -8,8 +8,7 @@
 - [mdlink-1.2-linux.7z](http://www.quantos.org/downloads/datacore/mdlink-1.2-linux.7z)
 
 ### 数据服务
-- [dataserver-1.0.7z](http://www.quantos.org/downloads/datacore/dataserver-1.0.7z)
-- [dataserver-1.1.7z](http://www.quantos.org/downloads/datacore/dataserver-1.1.7z)
+- [dataserver-1.2.7z](http://www.quantos.org/downloads/datacore/dataserver-1.2.7z)
 
 ## 源码下载
 
