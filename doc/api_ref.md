@@ -355,6 +355,82 @@ df,msg = api.bar_quote(
 | bidvolume4 | double | 申买量4 |
 | bidvolume5 | double | 申买量5 |
 
+### 历史Tick查询 tick
+查询历史tick数据，以dataframe格式返回查询结果。
+
+**注意**，TusharePro在线服务不支持tick查询，仅本地部署DataServer(1.2版及以上)支持。
+
+输入参数：
+
+1. 标的代码，支持多标的查询，必要参数。
+2. 开始时间 (start\_time)，精确到秒，string或者int类型：若为string类型，格式为&#39;HH:MM:SS&#39;，如&#39;09:32:35&#39;；若为int类型，格式为HHMMSS，如93235。缺省为为开盘时间。
+3. 结束时间 (end\_time)，精确到秒，string或者int类型：若为string类型，格式为&#39;HH:MM:SS&#39;，如&#39;09:32:35&#39;；若为int类型，格式为HHMMSS，如9323。缺省为收盘时间（历史）。
+4. 交易日 (trade\_date)，string或者int类型：若为string类型，格式&#39;YYYY-MM-DD&#39;，如&#39;2017-08-01&#39;；若为int类型，格式为YYYYMMDD，如20170801。缺省为0。
+5. 返回字段 (fields)，多字段以 &#39;,&#39; 隔开，为""时返回所有字段。缺省为""。
+
+| 字段 | 类型 | 说明 | 缺省值 |
+| --- | --- | --- | --- |
+| symbol | string | 标的代码，支持多标的查询 | 不可缺省 |
+| start\_time | int或string | 开始时间 | 开盘时间 |
+| end\_time | int或string | 结束时间 | 收盘时间 |
+| trade\_date | int或string | 交易日 | 0 |
+| fields | string | 返回字段 | &quot;&quot; |
+
+查询示例：
+
+```python
+df,msg = api.tick(symbol='600030.SH,000002.SZ',trade_date = 20171221, 
+                  start_time = '9:29:00',end_time = '09:32:15',
+                  fields='volume,date,trade_date,last')
+```
+
+输出字段：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| symbol | string | 标的代码 |
+| code | string | 交易所原始代码 |
+| date | int | 自然日,YYYYMMDD格式，如20170823 |
+| time | int | 时间，精确到毫秒，如14:21:05.330记为142105330 |
+| trade\_date | int | YYYYMMDD格式，如20170823 |
+| open | double | 开盘价 |
+| high | double | 最高价 |
+| low | double | 最低价 |
+| last | double | 最新价 |
+| close | double | 收盘价 |
+| volume | double | 成交量（总） |
+| turnover | double | 成交金额（总） |
+| vwap | double | 当日平均成交均价，计算公式为成交金额除以成交量 |
+| oi | double | 持仓总量 |
+| settle | double | 今结算价 |
+| iopv | double | IOPV净值估值 |
+| limit_up | double | 涨停价 |
+| limit_down | double | 跌停价 |
+| preclose | double | 昨收盘价 |
+| presettle | double | 昨结算价 |
+| preoi | double | 昨持仓 |
+| askprice1 | double | 申卖价1 |
+| askprice2 | double | 申卖价2 |
+| askprice3 | double | 申卖价3 |
+| askprice4 | double | 申卖价4 |
+| askprice5 | double | 申卖价5 |
+| bidprice1 | double | 申买价1 |
+| bidprice2 | double | 申买价2 |
+| bidprice3 | double | 申买价3 |
+| bidprice4 | double | 申买价4 |
+| bidprice5 | double | 申买价5 |
+| askvolume1 | double | 申卖量1 |
+| askvolume2 | double | 申卖量2 |
+| askvolume3 | double | 申卖量3 |
+| askvolume4 | double | 申卖量4 |
+| askvolume5 | double | 申卖量5 |
+| bidvolume1 | double | 申买量1 |
+| bidvolume2 | double | 申买量2 |
+| bidvolume3 | double | 申买量3 |
+| bidvolume4 | double | 申买量4 |
+| bidvolume5 | double | 申买量5 | 
+
+
 ### 参考数据查询 query
 
 参考数据查询，输入查询类型及查询参数，返回结果为dataframe格式。具体查询方法参见[tushare网站](http://tushare.org/pro)。
