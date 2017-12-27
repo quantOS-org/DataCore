@@ -75,6 +75,8 @@ windows安装包名格式为mdlink-[版本号]-win32.zip，如mdlink-1.0-win32.z
 
 + mdlink_ctp：接收期货行情。
 + mdlink_tdf：接收万得宏汇行情。
++ mdlink_sina：接收新浪股票行情。
++ mdlink_tencent: 接收腾讯股票行情。
 + mdlink2：用于行情汇总。
 + qms2：生成分钟线。
 
@@ -87,12 +89,14 @@ windows安装包名格式为mdlink-[版本号]-win32.zip，如mdlink-1.0-win32.z
 + market.csv：市场信息。
 
 #### scripts目录
-启动及关闭脚本，以linux为例，包含以下几个脚本：
+启动及关闭脚本和基础数据更新脚本，以linux为例，包含以下几个脚本：
 
 + start.sh:：启动脚本，依次启动qms2,mdlink2,mdlink_ctp,mdlink_tdf。
 + stop.sh：关闭脚本。
 + set-env.sh：为运行环境配置脚本。
 + jztsctrl：单程序启动关闭脚本。
++ download.py：基础数据下载程序
++ prepare_data.sh：基础数据准备脚本
 
 #### lib目录
 存放程序运行的依赖库。
@@ -171,8 +175,37 @@ windows安装包名格式为mdlink-[版本号]-win32.zip，如mdlink-1.0-win32.z
                     "markets": "SZ-2;SH-2;CF-2"
                 }
             ]
+        },
+        "stock2": {
+            "pub_addr": "tcp://0.0.0.0:10003",
+            "route": "SINA",
+            "source_id": 3,
+            "sources": [
+                {
+                    "id": "stock2",
+                    "route": "SINA",
+                    "addr": "http://hq.sinajs.cn/list=",
+                    "markets": "SZ;SH;",
+                    "insttypes": "1;2;3;4;5;100;"
+                }
+            ]
+        },
+
+        "stock3": {
+            "pub_addr": "tcp://0.0.0.0:10004",
+            "route": "TENCENT",
+            "source_id": 4,
+            "sources": [
+                {
+                    "id": "stock3",
+                    "route": "TENCENT",
+                    "addr": "http://qt.gtimg.cn/q=",
+                    "markets": "SZ;SH;",
+                    "insttypes": "1;2;3;4;5;100;"
+                }
+            ]
         }
-    }
+   }
 }
 ```
 
@@ -181,7 +214,13 @@ windows安装包名格式为mdlink-[版本号]-win32.zip，如mdlink-1.0-win32.z
 ### 4. 启动mdlink/qms
 #### Linux下启动
 cd 到 mdlink目录下，
-运行：
+
+每天开盘（日盘和夜盘）前请先运行数据准备程序：
+```bash
+$ ./scripts/prepare_data.sh
+```
+
+然后运行启动程序：
 ```bash
 $ ./scripts/start.sh
 ```
@@ -209,7 +248,10 @@ $ jztsctrl mdlink_ctp future1 start
 $ jztsctrl mdlink_tdf stock1 start
 ```
 #### Windows下启动
-进入scripts目录下，双击运行start.bat。
+
+每天开盘（日盘和夜盘）前请先运行数据准备程序，进入scripts目录下双击运行prepare_data.bat。
+
+在scripts目录下，双击运行start.bat。
 
 如果需要单独启动某个程序，命令行模式下进入mdlink目录，
 运行 "bin\程序名 配置名"
@@ -242,10 +284,12 @@ $ jztsctrl mdlink_tdf stock1 start
 存放运行log文件。
 
 #### script
-存放运行及关闭脚本，以Linux为例
+存放运行/关闭脚本和基础数据更新脚本，以Linux为例
 
 + start.sh：启动脚本
 + stop.sh：关闭脚本
++ download.py：基础数据下载程序
++ prepare_data.sh：基础数据准备脚本
 
 ### 6. DataServer配置准备
 程序配置存放在 dataserver-dev.conf 里面，根据自己的需求更改程序配置。
@@ -268,19 +312,49 @@ $ jztsctrl mdlink_tdf stock1 start
   "http_server" : { // websocket访问端口
     "port"      : "8912",
     "doc_root"  : "web/new"
-  }
+  },
+  
+  "his_bar" : { // 历史行情数据文件配置（1.2版本加入）
+    "bar1m_path"  : "D:/store/data/raw_data/BarONE/@MKT/@YYYY/@MKT@YYYYMMDD-1M.h5",
+    "bar5m_path"  : "D:/store/data/raw_data/BarFIVE/@MKT/@YYYY/@MKT@YYYYMMDD-5M.h5",
+    "bar15m_path" : "D:/store/data/raw_data/BarQUARTER/@MKT/@YYYY/@MKT@YYYYMMDD-15M.h5",
+    "tick_path"   : "D:/store/data/raw_data/Tick/@MKT/@YYYY/@MKT@YYYYMMDD-tk.h5"
+  }  
 }
 ```
+历史行情数据文件配置中，@MKT为市场通配符，如SHF，DCE，SH；@YYYY为年份通配符，如2017；@YYYYMMDD为日期通配符，如20171226。
+通配符在配置中不可以修改替换，不能实例化，不能填成“D:/store/data/raw_data/Tick/SHF/2017/SHF20171225-tk.h5”这样的写法。
+
+生成的数据文件按通配路径存放，dataserver就可以访问到历史行情数据了。例如，按照上面配置文件中的统配路径，存放好如下结构的数据文件：
+```
+D:/store/data/raw_data/BarONE/SHF/2017/SHF20171225-1M.h5
+D:/store/data/raw_data/BarFIVE/SHF/2017/SHF20171225-5M.h5
+D:/store/data/raw_data/BarQUARTER/SHF/2017/SHF20171225-15M.h5
+D:/store/data/raw_data/Tick/SHF/2017/SHF20171225-tk.h5
+```
+dataserver就可以访问SHF市场20171225交易日的数据了。
+
 注意：dataserver-dev.conf文件为json格式文件，上述示例中的注释仅展示用，实际使用json文件时需将注释内容删除。
 
 ### 7. 启动DataServer
 启动DataServer前需要确保mdlink和qms已经正常运行。
 
 #### Linux下启动
+每天开盘（日盘和夜盘）前请先运行数据准备程序：
+```bash
+$ ./script/prepare_data.sh
+```
+
+启动dataserver前确保script/start.sh中的JAVA_HOME已配置为本地java8路径。
 cd 到 dataserver目录下，运行：
 ```bash
 $ ./script/start.sh
 ```
+由于dataserver为一个服务程序，默认启动内存较大。
+如果启动时提醒内存不足，可以将启动内存调低为1g：将bin/dataserver文件中的"-Xms8g"修改为"-Xms1g"，"-Xmx8g"修改为"-Xmx1g"。
 
 #### Window下启动
+每天开盘（日盘和夜盘）前请先运行数据准备程序，进入script目录下双击运行prepare_data.bat。
+
 在script下双击start.bat
+如果启动时提醒内存不足，可以将启动内存调低为1g：将bin/dataserver.bat文件中的"-Xms8g"修改为"-Xms1g"，"-Xmx8g"修改为"-Xmx1g"。
