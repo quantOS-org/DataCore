@@ -68,11 +68,13 @@
 
 ## DataApi准备
 
+如果已安装JAQS，可以跳过此步骤，按jaqs给出的方式导入DataApi。
+
 python环境及依赖包的安装，请参考[DataApi安装指南](https://github.com/quantOS-org/DataApi)。
 
 首先导入API模块。
 ```python
-from DataApi import DataApi
+from DataApi import DataApi 
 ```
 然后创建DataApi对象，连接DataServer。
 ```python
