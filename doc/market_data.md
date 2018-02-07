@@ -15,12 +15,12 @@
 输入参数：
 
 1. 标的代码，支持多标的查询
-2. 需要返回字段(fields)，多字段以&#39;,&#39;隔开
+2. 需要返回字段(fields)，多字段以","隔开
 
 | 字段 | 类型 | 说明 | 缺省 |
 | --- | --- | --- | --- |
 | symbol | string | 标的代码，支持多标的查询 | 不可缺省 |
-| fields | string | 需要返回字段，多字段以&#39;,&#39;隔开；为&quot;&quot;时返回所有字段 | &quot;&quot; |
+| fields | string | 需要返回字段，多字段以 "逗号" 隔开；为空字符串时返回所有字段 |  |
 
 
 查询示例：
@@ -84,7 +84,7 @@ df, msg = api.quote(
 
 1. 标的代码，支持多标的查询
 2. 回调函数(func)，格式为func(k, v)。k为数据类型，目前只支持实时行情("quote")； v为实时行情数据，dictionary格式，数据含义参考quote函数输出字段定义。
-3. 需要返回字段(fields)，多字段以&#39;,&#39;隔开。
+3. 需要返回字段(fields)，多字段以逗号隔开。
 
 |字段 | 类型|说明 |缺省值|
 | --- | --- | --- | ---|
@@ -94,12 +94,12 @@ df, msg = api.quote(
 
 使用示例：
 ```python
-def on_bar(k,v):
-    print v['symbol'] // 标的代码
-    print v['last'] // 最新成交价
-    print v['time'] // 最新成交时间
+def on_quote(k,v):
+    print(v['symbol']) // 标的代码
+    print(v['last'])   // 最新成交价
+    print(v['time'])   // 最新成交时间
 
-subs_list,msg = api.subscribe("000001.SH, cu1709.SHF",func=on_bar,fields="symbol,last,time,volume")
+subs_list,msg = api.subscribe("000001.SH, cu1709.SHF",func=on_quote,fields="symbol,last,time,volume")
 ```
 ## 日线查询 daily
 
@@ -108,20 +108,20 @@ subs_list,msg = api.subscribe("000001.SH, cu1709.SHF",func=on_bar,fields="symbol
 输入参数：
 
 1. 标的代码，支持多标的查询，必要参数
-2. 开始日期 (start\_date)，string或者int类型：若为string类型，格式&#39;YYYY-MM-DD&#39;，如&#39;2017-08-01&#39;；若为int类型，格式为YYYYMMDD，如20170801。必要参数。
-3. 结束日期 (end\_date)，string或者int类型：若为string类型，格式&#39;YYYY-MM-DD&#39;，如&#39;2017-08-01&#39;；若为int类型，格式为YYYYMMDD，如20170801。必要参数。
-4. Bar类型(freq)，支持日线(&#39;1d&#39;)，周线(&#39;1w&#39;)和月线(&#39;1m&#39;)。缺省为日线(&#39;1d&#39;)。
-4. 复权类型(adjust\_mode)，string类型，&#39;pre&#39;为前复权，None不复权，&#39;post&#39;为后复权。缺省为None
-5. 返回字段 (fields)，多字段以 &#39;,&#39; 隔开，缺省时全字段返回。可选参数。
+2. 开始日期 (start\_date)，string或者int类型：若为string类型，格式"YYYY-MM-DD";，如"2017-08-01"；若为int类型，格式为YYYYMMDD，如20170801。必要参数。
+3. 结束日期 (end\_date)，string或者int类型：若为string类型，格式"YYYY-MM-DD"，如"2017-08-01"；若为int类型，格式为YYYYMMDD，如20170801。必要参数。
+4. Bar类型(freq)，支持日线("1d")，周线("1w")和月线("1m")。缺省为日线("1d")。
+4. 复权类型(adjust\_mode)，string类型，None不复权，"post"为后复权，缺省为None，不支持前复权。
+5. 返回字段 (fields)，多字段以 "," 隔开，缺省时全字段返回。可选参数。
 
 | 字段 | 类型 | 说明 | 缺省值 |
 | --- | --- | --- | --- |
 | symbol | string | 标的代码 ，支持多标的查询 | 不可缺省 |
 | start\_date | int | 开始日期, int时为YYYYMMDD格式(如20170809)| 不可缺省 |
 | end\_date | int | 结束日期，int时为YYYYMMDD格式(如20170809)| 不可缺省 |
-| freq | string | 日线类型 | &quot;1d&quot; |
-| adjust\_mode | string | &#39;pre&#39;为前复权，None不复权，&#39;post&#39;为后复权 | None |
-| fields | string | 需要返回字段，多字段以&#39;,&#39;隔开,为&quot;&quot;时返回所有字段 | &quot;&quot; |
+| freq | string | 日线类型 | 1d |
+| adjust\_mode | string | None不复权，"post"为后复权 | None |
+| fields | string | 需要返回字段，多字段以","隔开,为空字符串时返回所有字段 | |
 
 
 查询示例：
@@ -163,8 +163,8 @@ df, msg = api.daily(
 2. 开始时间 (start\_time)，精确到秒，int类型：格式为HHMMSS，如93235。缺省为为开盘时间。
 3. 结束时间 (end\_time)，精确到秒，int类型：格式为HHMMSS，如163235。缺省为当前时间（日内）或者收盘时间（历史）。
 4. 交易日 (trade\_date)，int类型：若为int类型，格式为YYYYMMDD，如20170801。缺省为当前交易日。
-5. Bar类型(freq)，支持一分钟线(&#39;1M&#39;)，五分钟线(&#39;5M&#39;)和十五分钟线(&#39;15M&#39;)。缺省为一分钟线 (&#39;1M&#39;)。
-6. 返回字段 (fields)，多字段以 &#39;,&#39; 隔开，缺省时全字段返回。
+5. Bar类型(freq)，支持一分钟线("1M")，五分钟线("5M")和十五分钟线("15M")。缺省为一分钟线 ("1M")。
+6. 返回字段 (fields)，多字段以 "," 隔开，缺省时全字段返回。
 
 | 字段 | 类型 | 说明 | 缺省值 |
 | --- | --- | --- | --- |
@@ -173,7 +173,7 @@ df, msg = api.daily(
 | end\_time | int | 结束时间 | 收盘时间 |
 | trade\_date | int | 交易日 | 当前交易日 |
 | freq | string | 分钟线类型 | &quot;1M&quot; |
-| fields | string | 需要返回字段，多字段以&#39;,&#39;隔开,为&quot;&quot;时返回所有字段 | &quot;&quot; |
+| fields | string | 需要返回字段，多字段以","隔开,为&quot;&quot;时返回所有字段 | &quot;&quot; |
 
 
 查询示例：
@@ -217,8 +217,8 @@ df,msg = api.bar(
 2. 开始时间 (start\_time)，精确到秒，int类型：格式为HHMMSS，如93235。缺省为为开盘时间。
 3. 结束时间 (end\_time)，精确到秒，int类型：格式为HHMMSS，如163235。缺省为当前时间（日内）或者收盘时间（历史）。
 4. 交易日 (trade\_date)，int类型：格式为YYYYMMDD，如20170801。缺省为当前交易日。
-5. Bar类型(freq)，支持一分钟线(&#39;1M&#39;)，五分钟线(&#39;5M&#39;)和十五分钟线(&#39;15M&#39;)。缺省为一分钟线 (&#39;1M&#39;)。
-6. 返回字段 (fields)，多字段以 &#39;,&#39; 隔开，缺省时全字段返回。
+5. Bar类型(freq)，支持一分钟线("1M")，五分钟线("5M")和十五分钟线("15M")。缺省为一分钟线 ("1M")。
+6. 返回字段 (fields)，多字段以 "," 隔开，缺省时全字段返回。
 
 | 字段 | 类型 | 说明 | 缺省值 |
 | --- | --- | --- | --- |
@@ -227,7 +227,7 @@ df,msg = api.bar(
 | end\_time | int | 结束时间 | 收盘时间 |
 | trade\_date | int | 交易日 | 当前交易日 |
 | freq | string | 分钟线类型 | &quot;1M&quot; |
-| fields | string | 需要返回字段，多字段以&#39;,&#39;隔开，为&quot;&quot;时返回所有字段 | &quot;&quot; |
+| fields | string | 需要返回字段，多字段以","隔开，为&quot;&quot;时返回所有字段 | &quot;&quot; |
 
 
 查询示例：
